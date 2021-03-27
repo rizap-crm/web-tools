@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <meta name="description" content="RIZAP Web Tools">
+		<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+        <meta name="author" content="">
+        <meta name="robots" content="noindex, nofollow">
+        <title>RIZAP Web Tools</title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+        <!--font style-->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+		
+		<!-- Lineawesome CSS -->
+        <link rel="stylesheet" href="assets/css/line-awesome.min.css">
+
+        <!-- Select2 CSS -->
+		<link rel="stylesheet" href="assets/css/select2.min.css">
+
+        <!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+
+        <!-- Datatable CSS -->
+		<link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
+
+		<!-- Theme CSS -->
+        <link rel="stylesheet" href="assets/css/theme-settings.css">
+
+        <!-- Loading CSS -->
+		<link rel="stylesheet" href="assets/css/loading.css" />
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="assets/css/style.css">
+
+      
+    </head>
+    <body id="skin-color" class="inter">
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			<!-- Header -->
+            <div class="header" id="heading">
+            <!--Move to heading.html, loaded by JS-->
+            </div>
+			<!-- /Header -->
+			
+			<!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+              <!-- Move to sidebar.html, loaded by JS-->           
+            </div>
+			<!-- /Sidebar -->
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->               
+                <div class="content container-fluid">
+
+                	<div class="crms-title row bg-white">
+                		<div class="col ">
+                			<h3 class="page-title m-0">
+			                <span class="page-title-icon bg-gradient-primary text-white ">
+			                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                              </span><span id="ml-ContentContacts"> 檢查課程預約狀況 </span></h3>
+                		</div>
+                	</div>
+                	
+            		
+            <div style="margin: 10px">
+              
+              <span style="margin-left:0px">  開始日期 </span> <input id="queryStartDate" type='date' />
+              <span style="margin-left:30px"> 結束日期 </span> <input id="queryEndDate"   type='date' />
+              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold text-white" onclick="accessData()" >檢 查</button>
+
+            </div>
+            
+					<!-- Page Header -->
+
+					
+					<!-- Content Starts -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card mb-0">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="reservations" class="table table-striped table-nowrap custom-table mb-0">
+											<thead>
+												<tr>
+													<th>客戶名字</th>
+													<th>合約編號</th>
+													<th>預約日期</th>
+													<th>預約時間</th>
+													<th>負責教練</th>
+													<th style="width:200px" >是否完成</th>													
+													<th>備註說明</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+							</div>		
+						</div>
+					</div>
+					<!-- /Content End -->
+					
+                </div>
+				<!-- /Page Content -->
+				
+            </div>
+			<!-- /Page Wrapper -->
+			
+        </div>
+		<!-- /Main Wrapper -->
+
+
+
+		<!-- jQuery -->
+        <script src="assets/js/jquery-3.5.0.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="assets/js/popper.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+		
+		<!-- Slimscroll JS -->
+		<script src="assets/js/jquery.slimscroll.min.js"></script>
+
+		<!-- Select2 JS -->
+		<script src="assets/js/select2.min.js"></script>
+
+		<!-- Datatable JS -->
+		<script src="assets/js/jquery.dataTables.min.js"></script>
+		<script src="assets/js/dataTables.bootstrap4.min.js"></script>
+
+		<!-- Datetimepicker JS -->
+		<script src="assets/js/moment.min.js"></script>
+		<script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!-- theme JS -->
+		<script src="assets/js/theme-settings.js"></script>
+		
+		<!-- Custom JS -->
+		<script src="assets/js/app.js"></script>
+             
+        <!-- loading JS -->
+        <script src="assets/js/loading.js"></script>
+              
+		<!-- Multi-langs JS -->
+		<script src="assets/js/multi-langs.js"></script>	
+                     
+        <!-- Load heading and sidebar script-->
+        <script type="text/javascript">
+          $("#heading").load("heading.html", function(){
+            console.log("heading loaded");
+            if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));
+          });           
+          
+          $("#sidebar").load("sidebar.html", function(){
+            console.log("sidebar loaded");
+            $("#sidebar-contacts").addClass("active");
+            if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));            
+          });
+         </script>
+         
+         <!-- Initial Datatable-->
+         <script type="text/javascript"> 
+          
+          var apiUrlBase = "https://api-for-sql.herokuapp.com/?API=00";
+           
+          var today = new Date();
+          $("#queryStartDate").val(today.toISOString().substr(0,10)); 
+          $("#queryEndDate").val(today.toISOString().substr(0,10)); 
+          
+          var sqlResult=[];
+//          $.loading.start('讀取資料');
+//          $.ajax({
+//            //url: "http://localhost:5000/?API=00",
+//            url: apiUrl,
+//            type: "GET",
+//            dataType: "json",
+//            success: function(returnData) {
+//              sqlResult = returnData;
+//              
+//              for (i=0; i< sqlResult.length; i++){
+//                sqlResult[i][3] = sqlResult[i][2].substr(11,5)+'~'+sqlResult[i][3].substr(11,5);
+//                sqlResult[i][2] = sqlResult[i][2].substr(0,10);
+//              }
+//              
+//              reservationsTable.clear();
+//              reservationsTable.rows.add(sqlResult).draw();
+//              $.loading.end();
+//            },
+//
+//            error: function() {
+//              alert("Database READ ERROR!!!");
+//            }
+//          }); 
+        
+          var reservationsTable =$('#reservations').DataTable( {
+            order: [[ 2, "asc" ]],
+            data: sqlResult,
+            columnDefs: [
+//              { targets: 0, 
+//                render: function (data) {  
+//                  var tmp = data.split(';');
+//                  //console.log(tmp);
+//                  return  '<a href="#" class="avatar">'+
+//                            '<img alt="" src="assets/img/profiles/'+tmp[0]+'">'+
+//                          '</a>'+
+//                            '<a href="#" data-toggle="modal" data-target="#system-user" onclick="alert()">' + tmp[1]+
+//                          '</a>'
+//                },
+//              },
+//              { targets: 4, 
+//                render: function (data) { 
+//                  var tmp = data.split(';');
+//                  return  '<span class="badge badge-gradient-'+tmp[1]+'">'+ tmp[0] +'</span>'
+//                },
+//              },
+              { targets: -2, 
+                render: function (data) {  
+                  if (data==true) return  '<i class="fa fa-check-square-o" aria-hidden="true"></i><span style="display:none" >Y</span>';
+                  else            return  '<i class="fa fa-times" aria-hidden="true"></i><span style="display:none">N</span>';
+                  
+                },
+              },
+//              { targets: -1, 
+//                render: function (data) {  
+//                  return '<div class="dropdown dropdown-action">'+
+//		                   '<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" '+
+//                           'aria-expanded="false"><i class="material-icons">more_vert</i></a> '+
+//				           '<div class="dropdown-menu dropdown-menu-right">' +
+//                             '<a class="dropdown-item" onclick="alert('+"'Edit: '+"+data+')">Edit</a>'+
+//                             '<a class="dropdown-item" onclick="alert('+"'Change: '+"+data+')">Change</a>'+
+//                           '</div>'+
+//                         '</div>'
+//                },
+//              }                   
+            ]           
+          } );
+           
+          accessData();
+        
+          function accessData(){
+            var startDateStr = $("#queryStartDate").val();
+            var endDateStr = $("#queryEndDate").val();
+            
+            console.log(startDateStr, endDateStr);
+            
+            var apiUrl = apiUrlBase + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
+            
+            //console.log(apiUrl);
+                
+            $.loading.start('讀取資料');
+            $.ajax({
+              //url: "http://localhost:5000/?API=00",
+              url: apiUrl,
+              type: "GET",
+              dataType: "json",
+              success: function(returnData) {
+                sqlResult = returnData;
+
+                for (i=0; i< sqlResult.length; i++){
+                  sqlResult[i][3] = sqlResult[i][2].substr(11,5)+'~'+sqlResult[i][3].substr(11,5);
+                  sqlResult[i][2] = sqlResult[i][2].substr(0,10);
+                }
+
+                reservationsTable.clear();
+                reservationsTable.rows.add(sqlResult).draw();
+                $.loading.end();
+              },
+
+              error: function() {
+                alert("Database READ ERROR!!!");
+              }
+            });             
+          }
+          
+        </script>
+        <style>
+          ::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+          }
+        </style>
+        
+    </body>
+</html>
