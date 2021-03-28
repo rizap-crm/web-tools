@@ -130,7 +130,7 @@
                 			<h3 class="page-title m-0">
 			                <span class="page-title-icon bg-gradient-primary text-white ">
 			                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                              </span><span id="ml-expire-title"> 檢查課程預約狀況 </span></h3>
+                              </span><span id="ml-expire-title"> 檢查即將到期課程 </span></h3>
                 		</div>
                 	</div>
                 	
@@ -339,6 +339,9 @@
             });             
           }
           
+          function enableExpiration(){
+            $("#sidebar-check-expirations").show();
+          }
           function checkExpirations(){
             alert("此功能尚在開發中");
           }
