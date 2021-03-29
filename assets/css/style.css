@@ -7596,6 +7596,8 @@ table .badge {
 	border-radius: 10px;/*50px;*/
 }
 
+.btn-gradient-primary:hover {color: #fbf279;}
+
 form .btn-secondary {
 	font-size: 14px;
 	padding: 10px 30px;

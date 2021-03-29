@@ -80,7 +80,7 @@
 
                       <span style="margin-left:0px">  開始日期 </span> <input id="rsvQueryStartDate" type='date' />
                       <span style="margin-left:30px"> 結束日期 </span> <input id="rsvQueryEndDate"   type='date' />
-                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold text-white" onclick="checkReservations()" >檢 查</button>
+                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkReservations()" >檢 查</button>
 
                     </div>
             
@@ -140,7 +140,7 @@
 
                       <span style="margin-left:0px">  開始日期 </span> <input id="expQueryStartDate" type='date' />
                       <span style="margin-left:30px"> 結束日期 </span> <input id="expQueryEndDate"   type='date' />
-                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold text-white" onclick="checkExpirations()" >檢 查</button>
+                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkExpirations()" >檢 查</button>
 
                     </div>
             
@@ -273,8 +273,8 @@
 //                'excelHtml5',
 //                'csvHtml5',
 //                'pdfHtml5'
-              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
-              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold' },
+              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold' }
               
             ],            
             order: [[ 3, "asc" ]],
@@ -322,8 +322,8 @@
           var expirationsTable  =$('#expirations').DataTable( {
             dom: 'Bfrtip',
             buttons: [
-              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
-              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold' },
+              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold' }
             ],
             order: [[ 2, "desc" ]],
             data: expResult,
