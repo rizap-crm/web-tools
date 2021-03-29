@@ -156,6 +156,7 @@
 										<table id="expirations" class="table table-striped table-nowrap custom-table mb-0">
 											<thead>
 												<tr>
+													<th>店鋪名稱</th>												
 													<th>客戶名字</th>
 													<th>合約編號</th>
 													<th>課程種類</th>
@@ -195,7 +196,6 @@
 		<!-- Slimscroll JS -->
 		<script src="assets/js/jquery.slimscroll.min.js"></script>
 
-		<!-- Select2 JS -->
 		<script src="assets/js/select2.min.js"></script>
 
 		<!-- Datatable JS -->
@@ -217,7 +217,12 @@
               
 		<!-- Multi-langs JS -->
 		<script src="assets/js/multi-langs.js"></script>	
-                     
+                    
+        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js  "></script>
         <!-- Load heading and sidebar script-->
         <script type="text/javascript">
           $("#heading").load("heading.html", function(){
@@ -252,8 +257,18 @@
           var expResult=[];
            
           var reservationsTable =$('#reservations').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+//                'copyHtml5',
+//                'excelHtml5',
+//                'csvHtml5',
+//                'pdfHtml5'
+              { "extend": 'csv', "text":'Export CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
+              { "extend": 'excel', "text":'Export EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+              
+            ],            
             order: [[ 3, "asc" ]],
-            data: rsvResult,
+            data: rsvResult,        
             columnDefs: [
 //              { targets: 0, 
 //                render: function (data) {  
@@ -295,7 +310,12 @@
           } );
                
           var expirationsTable  =$('#expirations').DataTable( {
-            order: [[ 4, "asc" ]],
+            dom: 'Bfrtip',
+            buttons: [
+              { "extend": 'csv', "text":'Export CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
+              { "extend": 'excel', "text":'Export EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+            ],
+            order: [[ 2, "desc" ]],
             data: expResult,
             columnDefs: [
 //              { targets: 0, 
@@ -413,9 +433,9 @@
                 expResult = returnData;
 
                 for (i=0; i< expResult.length; i++){
-                  expResult[i][4] = expResult[i][4].substr(0,10);
                   expResult[i][5] = expResult[i][5].substr(0,10);
                   expResult[i][6] = expResult[i][6].substr(0,10);
+                  expResult[i][7] = expResult[i][7].substr(0,10);
                 }
 
                 expirationsTable.clear();
