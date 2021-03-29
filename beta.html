@@ -96,6 +96,7 @@
 										<table id="reservations" class="table table-striped table-nowrap custom-table mb-0">
 											<thead>
 												<tr>
+													<th>店鋪名稱</th>
 													<th>客戶名字</th>
 													<th>合約編號</th>
 													<th>預約日期</th>
@@ -239,8 +240,8 @@
           var index_is_loaded = false;
           var expire_is_loaded = false;
            
-          var apiUrlBase = "https://api-for-sql.herokuapp.com/";
-          //var apiUrlBase = "http://localhost:5000/";
+//          var apiUrlBase = "https://api-for-sql.herokuapp.com/";
+          var apiUrlBase = "http://localhost:5000/";
            
           var today = new Date();
           $("#rsvQueryStartDate").val(today.toISOString().substr(0,10)); 
@@ -294,7 +295,7 @@
           } );
                
           var expirationsTable  =$('#expirations').DataTable( {
-            order: [[ 4, "asc" ]],
+            order: [[ 5, "asc" ]],
             data: expResult,
             columnDefs: [
 //              { targets: 0, 
@@ -377,8 +378,8 @@
                 rsvResult = returnData;
 
                 for (i=0; i< rsvResult.length; i++){
-                  rsvResult[i][3] = rsvResult[i][2].substr(11,5)+'~'+rsvResult[i][3].substr(11,5);
-                  rsvResult[i][2] = rsvResult[i][2].substr(0,10);
+                  rsvResult[i][4] = rsvResult[i][3].substr(11,5)+'~'+rsvResult[i][4].substr(11,5);
+                  rsvResult[i][3] = rsvResult[i][3].substr(0,10);
                 }
 
                 reservationsTable.clear();
