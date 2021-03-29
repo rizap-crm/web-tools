@@ -130,7 +130,7 @@
                 		<div class="col ">
                 			<h3 class="page-title m-0">
 			                <span class="page-title-icon bg-gradient-primary text-white ">
-			                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
+			                  <i class="fa fa-bell-o" aria-hidden="true"></i>
                               </span><span id="ml-expire-title"> 檢查即將到期課程 </span></h3>
                 		</div>
                 	</div>
@@ -218,11 +218,21 @@
 		<!-- Multi-langs JS -->
 		<script src="assets/js/multi-langs.js"></script>	
                     
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <!--dataTables 1.7.0 -->
+        <script src="assets/js/dataTables.buttons.min.js"></script>
+        
+        <!-- jszip 3.1.3-->
+        <script src="assets/js/jszip.min.js"></script>
+        
+<!--    支援中文字型比較麻煩
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js  "></script>
+-->
+       
+        <!-- HTML5 export buttons for Buttons and DataTables. 2016 SpryMedia Ltd - datatables.net/license
+        FileSaver.js (1.3.3) - MIT license Copyright © 2016 Eli Grey - http://eligrey.com -->
+        <script src="assets/js/buttons.html5.min.js  "></script>
+        
         <!-- Load heading and sidebar script-->
         <script type="text/javascript">
           $("#heading").load("heading.html", function(){
@@ -263,8 +273,8 @@
 //                'excelHtml5',
 //                'csvHtml5',
 //                'pdfHtml5'
-              { "extend": 'csv', "text":'Export CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
-              { "extend": 'excel', "text":'Export EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
+              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
               
             ],            
             order: [[ 3, "asc" ]],
@@ -312,8 +322,8 @@
           var expirationsTable  =$('#expirations').DataTable( {
             dom: 'Bfrtip',
             buttons: [
-              { "extend": 'csv', "text":'Export CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
-              { "extend": 'excel', "text":'Export EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
+              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold text-white' },
+              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold text-white' }
             ],
             order: [[ 2, "desc" ]],
             data: expResult,
@@ -363,6 +373,10 @@
           function show_rsv_page(){
             $(".page-wrapper").hide();
             $("#rsv-page").show(); 
+            $("#ml-Sidebar-check-reservations").css("color", "#FBF279");
+            $("#sidebar-check-reservations-icon").css("color", "#FBF279");
+            $("#ml-Sidebar-check-expirations").css("color", "white");            
+            $("#sidebar-check-expirations-icon").css("color", "white");            
             if (!index_is_loaded) {
               checkReservations();
               index_is_loaded = true;     
@@ -371,7 +385,11 @@
            
           function show_expire_page(){
             $(".page-wrapper").hide();
-            $("#expire-page").show();      
+            $("#expire-page").show();   
+            $("#ml-Sidebar-check-reservations").css("color", "white");            
+            $("#sidebar-check-reservations-icon").css("color", "white");            
+            $("#ml-Sidebar-check-expirations").css("color", "#FBF279");
+            $("#sidebar-check-expirations-icon").css("color", "#FBF279");
             if (!expire_is_loaded) {
               checkExpirations();
               expire_is_loaded = true;     
@@ -405,6 +423,8 @@
                 reservationsTable.clear();
                 reservationsTable.rows.add(rsvResult).draw();
                 $.loading.end();
+                $("#ml-Sidebar-check-reservations").css("color", "#FBF279");                
+                $("#sidebar-check-reservations-icon").css("color", "#FBF279");                
               },
 
               error: function() {
