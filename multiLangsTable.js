@@ -1,4 +1,4 @@
-var multiLangsTable = {
+﻿var multiLangsTable = {
 "檢查課程預約狀況_en":" Check Session Reservations",
 "檢查課程預約狀況_zh":" 檢查課程預約狀況 ",
 "檢查課程預約狀況_cn":" 检查课程预约状况",
@@ -55,44 +55,4 @@ var multiLangsTable = {
 "備註說明_zh":" 備註說明",
 "備註說明_cn":" 备注说明",
 "備註說明_jp":" 備考",
-}
-
-if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));
-
-function setLang(lang){
-  //console.log(lang);
-//  $("#langSelection").text(lang);
-//  localStorage.setItem("lang", lang);
-
-//  var langStr="en";
-//  switch (lang) {
-//    case 'English':
-//      $("#langFlag").attr("src", "assets/img/flags/us.png");
-//      langStr = "en";
-//      break;
-//    case 'French':
-//      $("#langFlag").attr("src", "assets/img/flags/fr.png");
-//      langStr = "fr";
-//      break;
-//    case 'Spanish':
-//      $("#langFlag").attr("src", "assets/img/flags/es.png");
-//      langStr = "es";
-//      break;
-//    case 'German':
-//      $("#langFlag").attr("src", "assets/img/flags/de.png");
-//      langStr = "de";
-//      break; 
-//    case '繁中':
-//      $("#langFlag").attr("src", "assets/img/flags/tw.png");
-//      langStr = "tw";
-//      break;       
-//  }
-
-  var langStr = lang;
-  $("[id*='ml-']").each(function(id,element) {
-    //console.log(element.id, element.innerHTML);
-    var idArr = element.id.split('-');
-    console.log(idArr[1]+"_"+langStr, multiLangsTable[idArr[1]+"_"+langStr]);
-    $("#ml-"+idArr[1]).text(multiLangsTable[idArr[1]+"_"+langStr]);
-  });
 }

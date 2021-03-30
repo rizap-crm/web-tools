@@ -71,16 +71,16 @@
                 			<h3 class="page-title m-0">
 			                <span class="page-title-icon bg-gradient-primary text-white ">
 			                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                              </span><span id="ml-rsv-title"> 檢查課程預約狀況 </span></h3>
+                              </span><span id="ml-檢查課程預約狀況"> 檢查課程預約狀況 </span></h3>
                 		</div>
                 	</div>
                 	
             		
                     <div style="margin: 10px">
 
-                      <span style="margin-left:0px">  開始日期 </span> <input id="rsvQueryStartDate" type='date' />
-                      <span style="margin-left:30px"> 結束日期 </span> <input id="rsvQueryEndDate"   type='date' />
-                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkReservations()" >檢 查</button>
+                      <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> <input id="rsvQueryStartDate" type='date' />
+                      <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> <input id="rsvQueryEndDate"   type='date' />
+                      <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkReservations()" ><span id="ml-檢查">檢 查</span></button>
 
                     </div>
             
@@ -96,14 +96,14 @@
 										<table id="reservations" class="table table-striped table-nowrap custom-table mb-0">
 											<thead>
 												<tr>
-													<th>店鋪名稱</th>
-													<th>客戶名字</th>
-													<th>合約編號</th>
-													<th>預約日期</th>
-													<th>預約時間</th>
-													<th>負責教練</th>
-													<th style="width:20px" >是否完成</th>													
-													<th>備註說明</th>
+													<th id="ml-店鋪名稱">店鋪名稱</th>
+													<th id="ml-客戶名字">客戶名字</th>
+													<th id="ml-合約編號">合約編號</th>
+													<th id="ml-預約日期">預約日期</th>
+													<th id="ml-預約時間">預約時間</th>
+													<th id="ml-負責教練">負責教練</th>
+													<th id="ml-是否完成" style="width:20px" >是否完成</th>													
+													<th id="ml-備註說明">備註說明</th>
 												</tr>
 											</thead>
 										</table>
@@ -138,8 +138,8 @@
             		
                     <div style="margin: 10px">
 
-                      <span style="margin-left:0px">  開始日期 </span> <input id="expQueryStartDate" type='date' />
-                      <span style="margin-left:30px"> 結束日期 </span> <input id="expQueryEndDate"   type='date' />
+                      <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> <input id="expQueryStartDate" type='date' />
+                      <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> <input id="expQueryEndDate"   type='date' />
                       <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkExpirations()" >檢 查</button>
 
                     </div>
@@ -156,7 +156,7 @@
 										<table id="expirations" class="table table-striped table-nowrap custom-table mb-0">
 											<thead>
 												<tr>
-													<th>店鋪名稱</th>												
+													<th id="ml-店鋪名稱">店鋪名稱</th>												
 													<th>客戶名字</th>
 													<th>合約編號</th>
 													<th>課程種類</th>
@@ -273,8 +273,8 @@
 //                'excelHtml5',
 //                'csvHtml5',
 //                'pdfHtml5'
-              { "extend": 'csv', "text":'匯出 CSV',"className": 'btn-gradient-primary font-weight-bold' },
-              { "extend": 'excel', "text":'匯出 EXCEL',"className": 'btn-gradient-primary font-weight-bold' }
+              { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
+              { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
               
             ],            
             order: [[ 3, "asc" ]],
