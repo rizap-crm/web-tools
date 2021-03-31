@@ -2,8 +2,7 @@
 if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));
 
 function setLang(lang){
-  console.log(lang);
-  $("#langSelection").text(lang);
+  //console.log(lang);
   localStorage.setItem("lang", lang);
 
 
@@ -22,12 +21,8 @@ function setLang(lang){
       break;      
   }
   
-
-  var langStr = lang;
   $("[id*='ml-']").each(function(id,element) {
-    //console.log(element.id, element.innerHTML);
     var idArr = element.id.split('-');
-    //console.log(idArr[1]+"_"+langStr, multiLangsTable[idArr[1]+"_"+langStr]);
-    $("#ml-"+idArr[1]).text(multiLangsTable[idArr[1]+"_"+langStr]);
+    $("#ml-"+idArr[1]).text(multiLangsTable[idArr[1]+"_"+lang]);
   });
 }
