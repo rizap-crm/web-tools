@@ -620,8 +620,17 @@
             success: function(returnData) {
               //returnFromAPI = JSON.parse(JSON.stringify(returnData));
               //console.log(returnFromAPI[0][3]);
-              //querySessionsResult = returnData;
-              querySessionsResult = JSON.parse(JSON.stringify(returnData));;
+              var querySessionsResultRaw = returnData;
+              console.log(querySessionsResultRaw);
+              
+              //querySessionsResult = JSON.parse(JSON.stringify(returnData));
+              //var querySessionsResultRaw = JSON.parse(JSON.stringify(returnData));
+              querySessionsResult=[];
+              for (var i=0; i< querySessionsResultRaw.length; i++){
+                if (querySessionsResultRaw[i][29]==true) {
+                  querySessionsResult.push(querySessionsResultRaw[i]);
+                }
+              }
               processContractSessionHistory();
             },
 
@@ -646,7 +655,7 @@
             if (contractSessionHistory[querySessionsResult[j][4]]== undefined) {
               apiUrl = apiUrlBase + "?API=04" + "&contractId=" + contractsToQuery[j]; 
               
-              $.loading.end();$.loading.start("讀取合約:"+contractsToQuery[j])ㄗ
+              $.loading.end();$.loading.start("讀取合約:"+contractsToQuery[j]);
               await $.ajax({
                 url: apiUrl,
                 type: "GET",
@@ -683,16 +692,23 @@
                 querySessionsResult[i][11] = Math.floor((endDate - startDate)/(864000*30))/100;
                 
                 // 處理 合約總價(未稅)
-                querySessionsResult[i][13] = Math.floor(parseFloat(querySessionsResult[i][12])/1.05 + 0.5);                
-                
-                // 處理 合約已執行堂數                
-                querySessionsResult[i][18] =0; // 尚未處理，先塞 0
+                querySessionsResult[i][13] = Math.floor(parseFloat(querySessionsResult[i][12])/1.05 + 0.5);  
                 
                 // 處理 開始後來店頻率
                 var usedMonth = (querySessionsResult[i][11] == 0)?1:querySessionsResult[i][11];
                 querySessionsResult[i][15] = Math.floor(parseFloat(querySessionsResult[i][18])/usedMonth + 0.5);
+                                
                 
+                // 處理 合約已執行堂數                
+                var sessionDateTime = querySessionsResult[i][0]+ " " + querySessionsResult[i][1];
+                if (contractSessionHistory[querySessionsResult[i][4]].length >0){
+                  console.log(contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1);
+                }
+                                
+                querySessionsResult[i][18] =contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1;
 
+                // 處理 合約剩餘堂數                
+                querySessionsResult[i][20] = querySessionsResult[i][17] - querySessionsResult[i][18];
                 
                 
                 // 處理 課程單價(含稅)
@@ -700,6 +716,19 @@
                 
                 // 處理 課程單價(未稅)
                 querySessionsResult[i][22] = Math.floor(parseFloat(querySessionsResult[i][13])/parseFloat(querySessionsResult[i][17]) + 0.5);                
+                
+                // 處理 合約已認列金額(含稅)
+                querySessionsResult[i][23] = querySessionsResult[i][18] * 
+                  parseFloat(querySessionsResult[i][12])/parseFloat(querySessionsResult[i][17]);
+                
+                // 處理 合約已認列金額(未稅)
+                querySessionsResult[i][24] = Math.floor(querySessionsResult[i][23] / 1.05 + 0.5);
+                
+                // 處理 合約未認列金額(含稅)
+                querySessionsResult[i][25] = querySessionsResult[i][12] - querySessionsResult[i][23];
+                
+                // 處理 合約未認列金額(未稅)
+                querySessionsResult[i][26] = querySessionsResult[i][13] - querySessionsResult[i][24];                
                 
               }
                             
