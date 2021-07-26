@@ -1,3 +1,7 @@
+.number-to-right {
+  text-align: right;
+}
+
 .spin-spinning {
     position: static;
     display: inline-block;
