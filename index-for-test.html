@@ -212,7 +212,7 @@
               <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> 
               <input id="sessionQueryEndDate"   type='date'/>
               
-              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="querrySessions()" >
+              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="querySessions()" >
                 <span id="ml-檢查">檢 查</span>
               </button>
             </div>
@@ -235,7 +235,7 @@
                             <th id="ml-合約編號">合約編號</th>
                             <th id="ml-負責教練">負責教練</th>
                             <th id="ml-合約名稱">合約名稱</th>                            
-                            <th id="ml-合約時間">合約時間</th>
+                            <th id="ml-合約時間_月">合約時間_月</th>
                             <th id="ml-合約簽訂日期">合約簽訂日期</th>
                             <th id="ml-合約開始日期">合約開始日期</th>
                             <th id="ml-合約期限">合約期限</th>
@@ -350,6 +350,7 @@
         console.log(apiUrlBase);           
 
         var contractSessionHistory={};
+        var courseSettings={};
         var returnFromAPI=[]; // for test
         
         // variables for each page
@@ -474,16 +475,16 @@
             { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
             { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
           ],
-          order: [[ 0, "asc" ], [ 1, "asc" ]],
+          order: [[ 2, "asc" ], [ 0, "asc" ], [ 1, "asc" ]],
           data: querySessionsResult,
           columnDefs: [ 
             {
-              targets: [11,12,13,15,21,22,23,24,25,26,27,28],
+              targets: [11,12,13,15,19,21,22,23,24,25,26,27,28],
               render: $.fn.dataTable.render.number(',', '.', 2),
               className: 'number-to-right'
             },
             {
-              targets: [16,17,18,19,20],
+              targets: [7,16,17,18,20],
               className: 'number-to-right'
             }            
           ]           
@@ -530,7 +531,7 @@
           //$("#ml-Sidebar-check-reservations").css("color", "white");                      
           $("#ml-Sidebar-query-sessions").css("color", "#FBF279");
           if (!query_sessions_is_load) {
-            querrySessions();
+            querySessions();
             query_sessions_is_load = true;     
           }
         }            
@@ -611,7 +612,12 @@
           });             
         }
         
-        function querrySessions(){
+        function querySessions(){
+          
+          // Get settings of all Courses
+          
+          
+          
           var startDateStr = $("#sessionQueryStartDate").val();
           var endDateStr = $("#sessionQueryEndDate").val();
 
@@ -647,16 +653,60 @@
           });             
         }
         
+
+        async function getCourseSettings() {
+          
+          var apiUrl;       
+          
+
+          apiUrl = apiUrlBase + "?API=05"; 
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "json",
+            success: function(returnData) {
+              for (var i=0; i< returnData.length; i++){
+                courseSettings[returnData[i][0]] = returnData[i][1];
+              }
+            },
+
+            error: function() {
+              alert("Database READ ERROR!!!");
+            }
+          }); 
+        }
+          
+          
+        
         async function processContractSessionHistory() {
           
           var apiUrl;
+          
+          $.loading.end();
+          $.loading.start("讀取課程設定");
+          apiUrl = apiUrlBase + "?API=05"; 
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "json",
+            success: function(returnData) {
+              for (var i=0; i< returnData.length; i++){
+                courseSettings[returnData[i][0]] = returnData[i][1];
+              }
+            },
+
+            error: function() {
+              alert("Database READ ERROR!!!");
+            }
+          });
+          
           
           // collect contracts need to be queried
           var contractsToQuery=[];
           for (i=0; i< querySessionsResult.length; i++){
               contractsToQuery.push(querySessionsResult[i][4])
           }
-          console.log(contractsToQuery);          
+          //console.log(contractsToQuery);          
           
           for (var j=0; j<contractsToQuery.length;j++) {
             if (contractSessionHistory[querySessionsResult[j][4]]== undefined) {
@@ -678,27 +728,42 @@
                   alert("Database READ ERROR!!!");
                 }
               }); 
-              console.log(contractsToQuery[j], "  done"); 
+              //console.log(contractsToQuery[j], "  done"); 
             }
           }
           
           var currentDate="0000-00-00";
           var sessionIndexForDay = 1;
           var amountForDay=0;
+          var storeId = "TW-Xinyi";
           for (i=0; i< querySessionsResult.length; i++){
 
             // 處理日期和時間
             querySessionsResult[i][1] = querySessionsResult[i][0].substr(11,5)+'~'+querySessionsResult[i][1].substr(11,5);
             querySessionsResult[i][0] = querySessionsResult[i][0].substr(0,10);
             
-            // 合約時間 not implement yet
-            querySessionsResult[i][7] = "需要定義";
+            // 合約時間_月 not implement yet
+            querySessionsResult[i][7] = courseSettings[querySessionsResult[i][6]];
 
-            // 保留日期
+            // 合約簽訂日期，Database ContractForms 裡的 ProcessTime
             querySessionsResult[i][8] = querySessionsResult[i][8].substr(0,10);
+            
+            // 合約開始日期，Database ContractForms 裡的 CourseSessionFirstStartDate           
             querySessionsResult[i][9] = querySessionsResult[i][9].substr(0,10);
-            querySessionsResult[i][10] = querySessionsResult[i][10].substr(0,10);       
+            
+            // 處理 合約到期日期
+              // 合約到期日期，Database ContractForms 裡的 ExpirationDate 
+              querySessionsResult[i][10] = querySessionsResult[i][10].substr(0,10);       
 
+              // 合約延伸到期日期，Database ContractForms 裡的 ExpirationDate 
+              querySessionsResult[i][30] = querySessionsResult[i][30].substr(0,10);   
+
+              // 如果有延伸，結合兩個日期
+              if (querySessionsResult[i][30] > "0001-01-01") {
+                querySessionsResult[i][10] = querySessionsResult[i][10] + "<br>Ext. " + querySessionsResult[i][30];
+              }
+            
+            
             // 處理 合約已進行(月)
             var startDate = new Date(querySessionsResult[i][9]);
             var endDate = new Date(querySessionsResult[i][0]);
@@ -712,9 +777,9 @@
 
             // 處理 合約已執行堂數                
             var sessionDateTime = querySessionsResult[i][0]+ " " + querySessionsResult[i][1];
-            if (contractSessionHistory[querySessionsResult[i][4]].length >0){
-              console.log(contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1);
-            }
+            //if (contractSessionHistory[querySessionsResult[i][4]].length >0){
+            //  console.log(contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1);
+            //}
 
             querySessionsResult[i][18] =contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1;
 
@@ -722,9 +787,7 @@
             var usedMonth = (querySessionsResult[i][11] == 0)?1:querySessionsResult[i][11];
             //四捨5入 querySessionsResult[i][15] = Math.floor(parseFloat(querySessionsResult[i][18])/usedMonth + 0.5);
             querySessionsResult[i][15] = parseFloat(querySessionsResult[i][18])/usedMonth;
-
-            // 合約退會堂數 not implement yet
-            querySessionsResult[i][19] = "";                
+             
 
             // 處理 合約剩餘堂數                
             querySessionsResult[i][20] = querySessionsResult[i][17] - querySessionsResult[i][18];
@@ -736,6 +799,10 @@
             // 處理 課程單價(未稅)              
             querySessionsResult[i][22] = parseFloat(querySessionsResult[i][13])/parseFloat(querySessionsResult[i][17]);                
 
+            // 合約退會堂數, 退費金額/課程單價(含稅)
+            querySessionsResult[i][19] = querySessionsResult[i][19]/querySessionsResult[i][21];               
+            
+            
             // 處理 合約已認列金額(含稅)
             querySessionsResult[i][23] = (querySessionsResult[i][18] * parseFloat(querySessionsResult[i][12])) / 
                                          parseFloat(querySessionsResult[i][17]);
@@ -748,9 +815,14 @@
 
             // 處理 合約未認列金額(未稅)
             querySessionsResult[i][26] = querySessionsResult[i][13] - querySessionsResult[i][24];                
-
+            if ( querySessionsResult[i][2] != storeId) {
+              console.log("store change");
+              storeId = querySessionsResult[i][2];
+              currentDate = "0000-00-00";
+            }
+            
             if (querySessionsResult[i][0] > currentDate) {
-              console.log("new day");
+              //console.log("new day");
               currentDate = querySessionsResult[i][0];
               sessionIndexForDay = 1;
               querySessionsResult[i][16] = sessionIndexForDay++; 
