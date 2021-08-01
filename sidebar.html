@@ -29,10 +29,15 @@
      
     <div style="margin-top:20px" >     
      <div style="margin-left: 20px">
-      <a href="#" class="sidebar-item" style="color:white;font-size:20px" onclick="show_query_sessions_page()" id="ml-Sidebar-query-sessions"><span id="ml-查詢課程狀況">由 ml-查詢課程狀況 搭配多國語言設定 決定</span>
+      <a href="#" class="sidebar-item" style="color:white; font-size:20px" onclick="show_query_sessions_page()" id="ml-Sidebar-query-sessions"><span id="ml-查詢課程狀況">由 ml-查詢課程狀況 搭配多國語言設定 決定</span>
       </a>
       </div>
     </div>     
 
   </div>
+  <script>
+    if (!experimental) {
+       $("#ml-Sidebar-query-sessions").hide();
+    }
+  </script>
 <!--</div>-->

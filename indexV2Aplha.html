@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script> 
+      // Configuratiion
+      var experimental=true;
+      var local_api = false;
+      
+      if (local_api) {
+        var apiUrlBase = "http://localhost:5000/";
+      } else {
+        var apiUrlBase = "https://api-for-sql.herokuapp.com/";
+      }
+
+      console.log(apiUrlBase);   
+      
+    </script>
+         
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <meta name="description" content="RIZAP Web Tools">
@@ -43,6 +58,8 @@
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
     <body id="skin-color" class="inter">
+
+      
       <!-- Main Wrapper -->
       <div class="main-wrapper">
 
@@ -346,10 +363,6 @@
         
         var today = new Date();
         
-        var apiUrlBase = "https://api-for-sql.herokuapp.com/";
-        //var apiUrlBase = "http://localhost:5000/";
-        console.log(apiUrlBase);           
-
         var contractSessionHistory={};
         var courseSettings={};
         var returnFromAPI=[]; // for test
