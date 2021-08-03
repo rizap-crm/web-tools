@@ -422,7 +422,7 @@ async function processAdmissionFee() {
       }
     });
   }
-
+                
   for (var i=0; i < queryAdmissionFeeResult.length; i++) {
    // 處理日期和時間
     queryAdmissionFeeResult[i][1] = queryAdmissionFeeResult[i][0].substr(11,5);

@@ -12,6 +12,35 @@
     </div>
   </div>
 
+  <!-- 顯示/隱藏 欄位 選擇 Modal -->
+  <div class="modal" id="sessionSelHideColumn" tabindex="-1" role="dialog" aria-labelledby="ml-選擇顯示欄位" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="ml-選擇顯示欄位">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>                        
+        </div>
+                 
+        <div style="margin-top=10px">
+          <button type="button" class="btn btn-secondary" style="margin:10px;background:#4CC3D5; border:none" onclick="sessionDispAll()"><span id="ml-全部顯示"></span></button>
+          <button type="button" class="btn btn-secondary" style="margin:10px;background:#6D757D; border:none" onclick="sessionHideAll()"><span id="ml-全部隱藏"></span></button>          
+        </div>
+                  
+        <div class="modal-body" id="session_modal">
+          <!--內容由下面程式 append-->
+        </div>
+         
+                           
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><span id="ml-放棄設定"></span></button>
+          <button type="button" class="btn btn-primary" onclick="sessionSetDispHide()"><span id="ml-儲存設定"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div style="margin: 10px">
     <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> 
     <input id="sessionQueryStartDate" type='date' />
@@ -22,6 +51,15 @@
     <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="querySessions()" >
       <span id="ml-檢查">檢 查</span>
     </button>
+    
+    <button type="button" style="float:right" class="btn-gradient-primary font-weight-bold" data-toggle="modal" data-target="#sessionSelHideColumn">
+      <span id="ml-選擇顯示欄位">選擇顯示欄位</span>
+    </button> 
+      
+    <button id="hiddenSessionCol" type="button" style="display:none; float:right;color:black;background:white; margin-right:10px" class="btn-gradient-primary font-weight-bold" >
+      <span id="ml-有隱藏欄位">有隱藏欄位</span>
+    </button> 
+        
   </div>
 
   <!-- Page Header -->
@@ -73,7 +111,38 @@
       </div>		
     </div>
   </div>
-  <!-- /Content End -->
+
+  <script>
+    function sessionSetDispHide(){
+      var someColIsHidden = false;
+      for (var i=0;i<sessionCol_nums;i++){
+        var col_check_id = "#sessionCol_" + i.toString();
+        querySessionsTable.column(i).visible(($(col_check_id).prop("checked")));
+        if (!($(col_check_id).prop("checked"))) someColIsHidden = true;
+      }
+      
+      (someColIsHidden)? $("#hiddenSessionCol").show():$("#hiddenSessionCol").hide();
+      
+      $("#sessionSelHideColumn").modal("toggle");
+      
+    }
+    
+    function sessionDispAll(){
+      for (var i=0;i<sessionCol_nums;i++){
+        var col_check_id = "#sessionCol_" + i.toString();
+        $(col_check_id).prop("checked", true);
+      }      
+    }
+    
+    function sessionHideAll(){
+      for (var i=0;i<sessionCol_nums;i++){
+        var col_check_id = "#sessionCol_" + i.toString();
+        $(col_check_id).prop("checked", false);
+      }      
+    }    
+    
+  </script>
+  
   <script>
     $("#sessionQueryStartDate").val(today.toISOString().substr(0,10)); 
     $("#sessionQueryEndDate").val(today.toISOString().substr(0,10));  
@@ -97,7 +166,44 @@
           className: 'number-to-right'
         }            
       ]           
-    } );    
+    } );  
+        
+    var sessionCol_nums = querySessionsTable.columns()[0].length;
+    console.log(sessionCol_nums);
+    
+    for (var i=0; i< sessionCol_nums; i+=2 ){
+      var name_0= querySessionsTable.column(i).header().outerHTML.split('\"')[1];    
+      if ((i+1) < sessionCol_nums) var name_1= 
+          querySessionsTable.column(i+1).header().outerHTML.split('\"')[1];
+      
+      var appendHTML= 
+      ` <div class="row">
+          <div class="col">
+            <input id="sessionCol_${i}" type="checkbox" checked=true />        
+            <span id="${name_0}"></span>
+          </div>
+      `;
+      
+      appendHTML+= ((i+1) >= sessionCol_nums)?"":
+      `
+          <div class="col">
+            <input id="sessionCol_${(i+1)}" type="checkbox" checked=true />        
+            <span id="${name_1}"></span>
+          </div>
+        </div>
+      `;        
+
+      //console.log(appendHTML);
+      $("#session_modal").append(appendHTML);
+    }    
+    
+    $("#hiddenSessionCol").hide();  
+    
+    if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));    
+    
   </script>
 </div>
+
+  <!-- /Content End -->
+  
 <!-- /Page Content -->
