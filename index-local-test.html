@@ -186,7 +186,7 @@
       var waitForLoaded = setInterval(function(){
         var allHtmlLoaded = headingLoaded && sidebarLoaded && rsvPageLoaded
                          && expirePageLoaded && sessionPageLoaded;
-        if (rsvPageLoaded) {
+        if (rsvPageLoaded) { // could be rsvPage loaded or allHtmlLoaded
           show_rsv_page();
           clearInterval(waitForLoaded);
         }

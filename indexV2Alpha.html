@@ -344,12 +344,12 @@
 
       <!-- Load heading and sidebar script-->
       <script type="text/javascript">
-        $("#heading").load("heading.html", function(){
+        $("#heading").load("./HtmlPages/heading.html", function(){
           console.log("heading loaded");
           if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));
         });           
 
-        $("#sidebar").load("sidebar.html", function(){
+        $("#sidebar").load("./HtmlPages/sidebar.html", function(){
           console.log("sidebar loaded");
           $("#sidebar-contacts").addClass("active");
           if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));      
