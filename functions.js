@@ -51,7 +51,7 @@ function show_rsv_page(){
   //$("#sidebar-check-reservations-icon").css("color", "#FBF279");            
   //$("#sidebar-check-expirations-icon").css("color", "white");            
   if (!index_is_loaded) {
-    checkReservations();
+    rsvCheck();
     index_is_loaded = true;     
   }
 }
@@ -112,7 +112,7 @@ function show_query_productSales_page(){
 }         
 
 
-function checkReservations(){
+function rsvCheck(){
   var startDateStr = $("#rsvQueryStartDate").val();
   var endDateStr = $("#rsvQueryEndDate").val();
 
@@ -139,8 +139,8 @@ function checkReservations(){
       }
 
 
-      reservationsTable.clear();
-      reservationsTable.rows.add(rsvResult).draw();
+      rsvDataTable.clear();
+      rsvDataTable.rows.add(rsvResult).draw();
       $.loading.end();
       $("#ml-Sidebar-check-reservations").css("color", "#FBF279");                
       $("#sidebar-check-reservations-icon").css("color", "#FBF279");                
