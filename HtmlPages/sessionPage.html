@@ -156,15 +156,14 @@
       order: [[ 2, "asc" ], [ 0, "asc" ], [ 1, "asc" ]],
       data: querySessionsResult,
       columnDefs: [ 
-        {
+        { // 小數點下兩位
           targets: [12,13,14,16,20,22,23,24,25,26,27,28,29],
-          render: $.fn.dataTable.render.number(',', '.', 2),
-          className: 'number-to-right'
+          render: $.fn.dataTable.render.number(',', '.', 2)
         },
-        {
-          targets: [8,17,18,19,21],
+        { // 靠右對齊
+          targets: [8,17,18,19,21,12,13,14,16,20,22,23,24,25,26,27,28,29],
           className: 'number-to-right'
-        }            
+        },            
       ]           
     } );  
         
