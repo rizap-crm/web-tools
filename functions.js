@@ -519,22 +519,24 @@ function productCheck(){
       }
       
       for (var i=0; i< productResult.length; i++) {
-       // 處理日期和時間
-        productResult[i][1] = admissionFeeResult[i][0].substr(11,5);
-        admissionFeeResult[i][0] = admissionFeeResult[i][0].substr(0,10);     
+       // 處理日期
+        productResult[i][0] = productResult[i][0].substr(0,10);     
         
-        productResult[i][8] = productResult[i][7]/1.05;
-        productResult[i][11] = productResult[i][10]/1.05;
+        productResult[i][8] =  productResult[i][7]/1.05;          // 處理產品單價(未稅)
+        productResult[i][11] = productResult[i][10]/1.05;         // 處理合約總價(未稅)
+        productResult[i][12] = productResult[i][12].substr(0,10); // 處理付款日         
+        productResult[i][14] = productResult[i][13]/1.05;         // 處理付款金額(未稅)  
+     
         
         // 發票種類
-        if (productResult[i][12]!=null) {
-          if (productResult[i][12].includes("Duplicate")) productResult[i][12] = "二聯式發票";
-          if (productResult[i][12].includes("Triplicate")) productResult[i][12] = "三聯式發票";
+        if (productResult[i][16]!=null) {
+          if (productResult[i][16].includes("Duplicate")) productResult[i][16] = "二聯式發票";
+          if (productResult[i][16].includes("Triplicate")) productResult[i][16] = "三聯式發票";
         }
 
         // 發票發行日期
-        productResult[i][13] = productResult[i][13].substr(0,10);              
-        if (productResult[i][13]=='0001-01-01') productResult[i][13] = "";        
+        productResult[i][17] = productResult[i][17].substr(0,10);              
+        if (productResult[i][17]=='0001-01-01') productResult[i][17] = "";        
       }
       
       productDataTable.clear();
