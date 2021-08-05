@@ -527,6 +527,11 @@ function productCheck(){
         productResult[i][12] = productResult[i][12].substr(0,10); // 處理付款日         
         productResult[i][14] = productResult[i][13]/1.05;         // 處理付款金額(未稅)  
      
+        // 付款方式
+        if (productResult[i][15]!=null) {
+          if (productResult[i][15].includes("CreditCard")) productResult[i][15] = "信用卡";
+          if (productResult[i][15].includes("Cash")) productResult[i][15] = "現金";
+        }        
         
         // 發票種類
         if (productResult[i][16]!=null) {
