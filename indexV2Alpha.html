@@ -57,819 +57,150 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
-    <body id="skin-color" class="inter">
+  <body id="skin-color" class="inter">
 
-      
-      <!-- Main Wrapper -->
-      <div class="main-wrapper">
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
 
-        <!-- Header -->
-        <div class="header" id="heading">
-        <!--Move to heading.html, loaded by JS-->
-        </div>
-        <!-- /Header -->
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-          <!-- Move to sidebar.html, loaded by JS-->           
-        </div>
-        <!-- /Sidebar -->
-
-        <!-- Page Wrapper -->
-        <div class="page-wrapper" id="rsv-page">
-
-          <!-- Page Content -->               
-          <div class="content container-fluid">
-
-            <div class="crms-title row bg-white">
-              <div class="col ">
-                <h3 class="page-title m-0">
-                  <span class="page-title-icon bg-gradient-primary text-white ">
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                  </span>
-                  <span id="ml-檢查課程預約狀況"> 檢查課程預約狀況 </span>
-                </h3>
-              </div>
-            </div>
-
-
-            <div style="margin: 10px">
-              <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> 
-              <input id="rsvQueryStartDate" type='date' />
-              
-              <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> 
-              <input id="rsvQueryEndDate" type='date'/>
-              
-              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkReservations()" >
-                <span id="ml-檢查">檢 查</span>
-              </button>
-            </div>
-
-            <!-- Page Header -->
-
-            <!-- Content Starts -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-0">
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table id="reservations" class="table table-striped table-nowrap custom-table mb-0">
-                        <thead>
-                          <tr>
-                            <th id="ml-店鋪名稱">店鋪名稱</th>
-                            <th id="ml-客戶名字">客戶名字</th>
-                            <th id="ml-合約編號">合約編號</th>
-                            <th id="ml-預約日期">預約日期</th>
-                            <th id="ml-預約時間">預約時間</th>
-                            <th id="ml-負責教練">負責教練</th>
-                            <th id="ml-是否完成" style="width:20px" >是否完成</th>													
-                            <th id="ml-備註說明">備註說明</th>
-                          </tr>
-                        </thead>
-                      </table>
-                    </div>
-                  </div>
-                </div>		
-              </div>
-            </div>
-            <!-- /Content End -->
-
-          </div>
-          <!-- /Page Content -->
-
-        </div>
-        <!-- /Page Wrapper -->
-
-        <!-- Page Wrapper -->
-        <div class="page-wrapper" id="expire-page">
-
-          <!-- Page Content -->               
-          <div class="content container-fluid">
-
-            <div class="crms-title row bg-white">
-              <div class="col ">
-                <h3 class="page-title m-0">
-                  <span class="page-title-icon bg-gradient-primary text-white ">
-                    <i class="fa fa-bell-o" aria-hidden="true"></i>
-                  </span>
-                  <span id="ml-檢查即將到期合約"> 檢查即將到期合約 </span>
-                </h3>
-              </div>
-            </div>
-
-            <div style="margin: 10px">
-              <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> 
-              <input id="expQueryStartDate" type='date' />
-              
-              <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> 
-              <input id="expQueryEndDate"   type='date' />
-              
-              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkExpirations()" >
-                <span id="ml-檢查">檢 查</span>
-              </button>
-            </div>
-
-            <!-- Page Header -->
-
-            <!-- Content Starts -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card mb-0">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="expirations" class="table table-striped table-nowrap custom-table mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th id="ml-店鋪名稱">店鋪名稱</th>												
-                                            <th id="ml-客戶名字">客戶名字</th>
-                                            <th id="ml-合約編號">合約編號</th>
-                                            <th id="ml-課程種類">課程種類</th>
-                                            <th id="ml-合約狀態">合約狀態</th>
-                                            <th id="ml-合約到期日期">合約到期日期</th>
-                                            <th id="ml-延展到期日期">延展到期日期</th>
-                                            <th id="ml-第一次上課時間">第一次上課時間</th>
-                                            <th id="ml-負責教練">負責教練</th>										
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>		
-                </div>
-            </div>
-            <!-- /Content End -->
-
-          </div>
-          <!-- /Page Content -->
-
-        </div>
-        <!-- /Page Wrapper -->		
-
-        <!-- Page Wrapper -->
-        <div class="page-wrapper" id="query-sessions-page">
-
-          <!-- Page Content -->               
-          <div class="content container-fluid">
-
-            <div class="crms-title row bg-white">
-              <div class="col ">
-                <h3 class="page-title m-0">
-                  <span class="page-title-icon bg-gradient-primary text-white ">
-                    <i class="fa fa-list-ul" aria-hidden="true"></i>
-                  </span>
-                  <span id="ml-查詢課程狀況">由 ml-查詢課程狀況 搭配多國語言設定 決定</span>
-                </h3>
-              </div>
-            </div>
-
-            <div style="margin: 10px">
-              <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> 
-              <input id="sessionQueryStartDate" type='date' />
-              
-              <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> 
-              <input id="sessionQueryEndDate"   type='date'/>
-              
-              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="querySessions()" >
-                <span id="ml-檢查">檢 查</span>
-              </button>
-            </div>
-
-            <!-- Page Header -->
-
-            <!-- Content Starts -->
-            <div class="row">
-              <div class="col-md-12">
-                <div class="card mb-0">
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table id="query-sessions" class="table table-striped table-nowrap custom-table mb-0">
-                        <thead>
-                          <tr>
-                            <th id="ml-上課日期">預約日期</th>
-                            <th id="ml-上課時間">預約時間</th>                           
-                            <th id="ml-店鋪名稱">店鋪名稱</th>
-                            <th id="ml-客戶名字">客戶名字</th>
-                            <th id="ml-客戶編號">客戶編號</th>
-                            <th id="ml-合約編號">合約編號</th>
-                            <th id="ml-負責教練">負責教練</th>
-                            <th id="ml-合約名稱">合約名稱</th>                            
-                            <th id="ml-合約時間_月">合約時間_月</th>
-                            <th id="ml-合約簽訂日期">合約簽訂日期</th>
-                            <th id="ml-合約開始日期">合約開始日期</th>
-                            <th id="ml-合約期限">合約期限</th>
-                            <th id="ml-合約已進行_月">合約已進行(月)</th>
-                            <th id="ml-合約總價_含稅">合約總價(含稅)</th>
-                            <th id="ml-合約總價_未稅">合約總價(未稅)</th>
-                            <th id="ml-合約狀態">合約狀態</th>
-                            <th id="ml-開始後來店頻率">開始後來店頻率</th>
-                            <th id="ml-堂數排序">堂數排序</th>
-                            <th id="ml-合約堂數">合約堂數</th>
-                            <th id="ml-合約已執行堂數">合約已執行堂數</th>
-                            <th id="ml-合約退會堂數">合約退會堂數</th>
-                            <th id="ml-合約剩餘堂數">合約剩餘堂數</th>
-                            <th id="ml-課程單價_含稅">課程單價(含稅)</th>
-                            <th id="ml-課程單價_未稅">課程單價(未稅)</th>
-                            <th id="ml-合約已認列金額_含稅">合約已認列金額(含稅)</th>
-                            <th id="ml-合約已認列金額_未稅">合約已認列金額(未稅)</th>
-                            <th id="ml-合約未認列金額_含稅">合約未認列金額(含稅)</th>
-                            <th id="ml-合約未認列金額_未稅">合約未認列金額(未稅)</th>
-                            <th id="ml-當日認列金額_含稅">當日認列金額(含稅)</th>                            
-                            <th id="ml-當日認列金額_未稅">當日認列金額(未稅)</th>                            
-                          </tr>
-                        </thead>
-                      </table>
-                    </div>
-                  </div>
-                </div>		
-              </div>
-            </div>
-            <!-- /Content End -->
-
-          </div>
-          <!-- /Page Content -->
-
-        </div>
-        <!-- /Page Wrapper -->					
-
+      <!-- Header -->
+      <div class="header" id="heading">
+      <!--Move to heading.html, loaded by JS-->
       </div>
-      <!-- /Main Wrapper -->
+      <!-- /Header -->
 
-      <!-- jQuery -->
-      <script src="assets/js/jquery-3.5.0.min.js"></script>
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <!-- Move to sidebar.html, loaded by JS-->           
+      </div>
+      <!-- /Sidebar -->
 
-      <!-- Bootstrap Core JS -->
-      <script src="assets/js/popper.min.js"></script>
-      <script src="assets/js/bootstrap.min.js"></script>
+      <!-- Reservation Page Wrapper -->
+      <div class="page-wrapper" id="rsv-page">   
+        <!-- Move to rsvPage.html, loaded by JS-->     
+      </div>
+      <!-- /ReservationPage Wrapper -->
 
-      <!-- Slimscroll JS -->
-      <script src="assets/js/jquery.slimscroll.min.js"></script>
+      <!-- Expiration Page Wrapper -->
+      <div class="page-wrapper" id="expire-page">
+        <!-- Move to expirePage.html, loaded by JS-->  
+      </div>
+      <!-- /ExpirationPage Wrapper -->		
 
-      <script src="assets/js/select2.min.js"></script>
+      <!-- Session Page Wrapper -->
+      <div class="page-wrapper" id="query-sessions-page">
+        <!-- Move to sessionPage.html, loaded by JS-->  
+      </div>
+      <!-- /Session Page Wrapper -->	
 
-      <!-- Datatable JS -->
-      <script src="assets/js/jquery.dataTables.min.js"></script>
-      <script src="assets/js/dataTables.bootstrap4.min.js"></script>
-
-      <!-- Datetimepicker JS -->
-      <script src="assets/js/moment.min.js"></script>
-      <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
-
-      <!-- theme JS -->
-      <script src="assets/js/theme-settings.js"></script>
-
-      <!-- Custom JS -->
-      <script src="assets/js/app.js"></script>
-
-      <!-- loading JS -->
-      <script src="assets/js/loading.js"></script>
-
-      <!-- Multi-langs JS -->
-      <script src="multiLangsTable.js"></script>	
-      <script src="assets/js/multi-langs.js"></script>	
-
-      <!--dataTables 1.7.0 -->
-      <script src="assets/js/dataTables.buttons.min.js"></script>
-
-      <!-- jszip 3.1.3-->
-      <script src="assets/js/jszip.min.js"></script>
-
-      <!-- pdfmake 支援中文字型比較麻煩，不先用
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-      -->
-
-      <!-- HTML5 export buttons for Buttons and DataTables. 2016 SpryMedia Ltd - datatables.net/license
-      FileSaver.js (1.3.3) - MIT license Copyright © 2016 Eli Grey - http://eligrey.com -->
-      <script src="assets/js/buttons.html5.min.js  "></script>
-
-      <!-- Load heading and sidebar script-->
-      <script type="text/javascript">
-        $("#heading").load("./HtmlPages/heading.html", function(){
-          console.log("heading loaded");
-          if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));
-        });           
-
-        $("#sidebar").load("./HtmlPages/sidebar.html", function(){
-          console.log("sidebar loaded");
-          $("#sidebar-contacts").addClass("active");
-          if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));      
-
-          //$("#sidebar-check-expirations").hide(); //disable check expirarion function
-        });
-      </script>
-         
-      <!-- Main Start-->
-      <script type="text/javascript"> 
-        
-        var today = new Date();
-        
-        var contractSessionHistory={};
-        var courseSettings={};
-        var returnFromAPI=[]; // for test
-        
-        // variables for each page
-        var index_is_loaded = false;
-        var expire_is_loaded = false;
-        var query_sessions_is_load = false;
-
-        var rsvResult=[];
-        var expResult=[];
-        var querySessionsResult=[];
-
-        $("#rsvQueryStartDate").val(today.toISOString().substr(0,10)); 
-        $("#rsvQueryEndDate").val(today.toISOString().substr(0,10));           $("#expQueryStartDate").val(today.toISOString().substr(0,10)); 
-        $("#expQueryEndDate").val(today.toISOString().substr(0,10)); 
-        $("#sessionQueryStartDate").val(today.toISOString().substr(0,10)); 
-        $("#sessionQueryEndDate").val(today.toISOString().substr(0,10));         
-
-        var reservationsTable =$('#reservations').DataTable( {
-          dom: 'Bfrtip',
-          buttons: [
-        //                'copyHtml5',
-        //                'excelHtml5',
-        //                'csvHtml5',
-        //                'pdfHtml5'
-            { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
-            { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
-
-          ],            
-          order: [[ 3, "asc" ]],
-          data: rsvResult,        
-          columnDefs: [
-        //              { targets: 0, 
-        //                render: function (data) {  
-        //                  var tmp = data.split(';');
-        //                  //console.log(tmp);
-        //                  return  '<a href="#" class="avatar">'+
-        //                            '<img alt="" src="assets/img/profiles/'+tmp[0]+'">'+
-        //                          '</a>'+
-        //                            '<a href="#" data-toggle="modal" data-target="#system-user" onclick="alert()">' + tmp[1]+
-        //                          '</a>'
-        //                },
-        //              },
-        //              { targets: 4, 
-        //                render: function (data) { 
-        //                  var tmp = data.split(';');
-        //                  return  '<span class="badge badge-gradient-'+tmp[1]+'">'+ tmp[0] +'</span>'
-        //                },
-        //              },
-            { targets: -2, 
-              render: function (data) {  
-                if (data==true) return  '<i class="fa fa-check-square-o" aria-hidden="true"></i><span style="display:none" >Y</span>';
-                else            return  '<i class="fa fa-times" aria-hidden="true"></i><span style="display:none">N</span>';
-
-              },
-            },
-        //              { targets: -1, 
-        //                render: function (data) {  
-        //                  return '<div class="dropdown dropdown-action">'+
-        //		                   '<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" '+
-        //                           'aria-expanded="false"><i class="material-icons">more_vert</i></a> '+
-        //				           '<div class="dropdown-menu dropdown-menu-right">' +
-        //                             '<a class="dropdown-item" onclick="alert('+"'Edit: '+"+data+')">Edit</a>'+
-        //                             '<a class="dropdown-item" onclick="alert('+"'Change: '+"+data+')">Change</a>'+
-        //                           '</div>'+
-        //                         '</div>'
-        //                },
-        //              }                   
-          ]           
-        } );
-        
-        var expirationsTable  =$('#expirations').DataTable( {
-          dom: 'Bfrtip',
-          buttons: [
-            { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
-            { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
-          ],
-          order: [[ 5, "asc" ]],
-          data: expResult,
-          columnDefs: [
-        //              { targets: 0, 
-        //                render: function (data) {  
-        //                  var tmp = data.split(';');
-        //                  //console.log(tmp);
-        //                  return  '<a href="#" class="avatar">'+
-        //                            '<img alt="" src="assets/img/profiles/'+tmp[0]+'">'+
-        //                          '</a>'+
-        //                            '<a href="#" data-toggle="modal" data-target="#system-user" onclick="alert()">' + tmp[1]+
-        //                          '</a>'
-        //                },
-        //              },
-        //              { targets: 4, 
-        //                render: function (data) { 
-        //                  var tmp = data.split(';');
-        //                  return  '<span class="badge badge-gradient-'+tmp[1]+'">'+ tmp[0] +'</span>'
-        //                },
-        //              },
-        //              { targets: -2, 
-        //                render: function (data) {  
-        //                  if (data==true) return  '<i class="fa fa-check-square-o" aria-hidden="true"></i><span style="display:none" >Y</span>';
-        //                  else            return  '<i class="fa fa-times" aria-hidden="true"></i><span style="display:none">N</span>';
-        //                  
-        //                },
-        //              },
-        //              { targets: -1, 
-        //                render: function (data) {  
-        //                  return '<div class="dropdown dropdown-action">'+
-        //		                   '<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" '+
-        //                           'aria-expanded="false"><i class="material-icons">more_vert</i></a> '+
-        //				           '<div class="dropdown-menu dropdown-menu-right">' +
-        //                             '<a class="dropdown-item" onclick="alert('+"'Edit: '+"+data+')">Edit</a>'+
-        //                             '<a class="dropdown-item" onclick="alert('+"'Change: '+"+data+')">Change</a>'+
-        //                           '</div>'+
-        //                         '</div>'
-        //                },
-        //              }                   
-          ]           
-        } );
-
-        var querySessionsTable  =$('#query-sessions').DataTable( {
-          dom: 'Bfrtip',
-          buttons: [
-            { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
-            { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
-          ],
-          order: [[ 2, "asc" ], [ 0, "asc" ], [ 1, "asc" ]],
-          data: querySessionsResult,
-          columnDefs: [ 
-            {
-              targets: [12,13,14,16,20,22,23,24,25,26,27,28,29],
-              render: $.fn.dataTable.render.number(',', '.', 2),
-              className: 'number-to-right'
-            },
-            {
-              targets: [8,17,18,19,21],
-              className: 'number-to-right'
-            }            
-          ]           
-        } );
+      <!-- AdmissionFee Page Wrapper -->
+      <div class="page-wrapper" id="admissionFee-page">
+      </div>
+      <!-- /AdmissionFee Page Wrapper -->	        
 
 
-        show_rsv_page();
+    </div>
+    <!-- /Main Wrapper -->
 
-        function show_rsv_page(){
-          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
-          $(".sidebar-item").css("color","white")
+    <!-- jQuery -->
+    <script src="assets/js/jquery-3.5.0.min.js"></script>
 
-          $("#rsv-page").show(); 
-          $("#ml-Sidebar-check-reservations").css("color", "#FBF279");
-          //$("#ml-Sidebar-check-expirations").css("color", "white");            
-          //$("#sidebar-check-reservations-icon").css("color", "#FBF279");            
-          //$("#sidebar-check-expirations-icon").css("color", "white");            
-          if (!index_is_loaded) {
-            checkReservations();
-            index_is_loaded = true;     
-          }
+    <!-- Bootstrap Core JS -->
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
+
+    <script src="assets/js/select2.min.js"></script>
+
+    <!-- Datatable JS -->
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- theme JS -->
+    <script src="assets/js/theme-settings.js"></script>
+
+    <!-- Custom JS -->
+    <script src="assets/js/app.js"></script>
+
+    <!-- loading JS -->
+    <script src="assets/js/loading.js"></script>
+
+    <!-- Multi-langs JS -->
+    <script src="multiLangsTable.js"></script>	
+    <script src="assets/js/multi-langs.js"></script>	
+
+    <!--dataTables 1.7.0 -->
+    <script src="assets/js/dataTables.buttons.min.js"></script>
+
+    <!-- jszip 3.1.3-->
+    <script src="assets/js/jszip.min.js"></script>
+
+    <!-- pdfmake 支援中文字型比較麻煩，不先用
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    -->
+
+    <!-- HTML5 export buttons for Buttons and DataTables. 2016 SpryMedia Ltd - datatables.net/license
+    FileSaver.js (1.3.3) - MIT license Copyright © 2016 Eli Grey - http://eligrey.com -->
+    <script src="assets/js/buttons.html5.min.js  "></script>
+
+    <!-- My Functions all defined in functions.js-->
+    <script src="functions.js"></script>
+    
+    <!-- Main Start-->
+    <script type="text/javascript"> 
+      
+      var today = new Date();
+
+      var contractSessionHistory={};
+      var courseSettings={};
+      var returnFromAPI=[]; // for test
+     
+      // variables for each page data load status
+      var index_is_loaded = false;
+      var expire_is_loaded = false;
+      var query_sessions_is_load = false;
+      var query_admissionFee_is_load = false;
+
+      // variables for Tables
+      var rsvResult=[];
+      var expResult=[];
+      var querySessionsResult=[];
+      var queryAdmissionFeeResult=[];
+      
+      // variables for each page html load status
+      var headingLoaded = false;
+      var sidebarLoaded = false;
+      var rsvPageLoaded = false;
+      var expirePageLoaded = false;
+      var sessionPageLoaded = false;
+      var adminFeePageLoaded = false;
+      loadPages();      
+    
+      // Program entry
+      var waitForLoaded = setInterval(function(){
+        var allHtmlLoaded = headingLoaded && sidebarLoaded && rsvPageLoaded
+                         && expirePageLoaded && sessionPageLoaded;
+        if (rsvPageLoaded) { // could be rsvPage loaded or allHtmlLoaded
+          show_rsv_page();
+          clearInterval(waitForLoaded);
         }
-
-        function show_expire_page(){
-          $(".page-wrapper").hide();
-          $(".sidebar-item").css("color","white")
-
-          $("#expire-page").show();   
-          //$("#ml-Sidebar-check-reservations").css("color", "white");                      
-          $("#ml-Sidebar-check-expirations").css("color", "#FBF279");
-          //$("#sidebar-check-reservations-icon").css("color", "white");              
-          //$("#sidebar-check-expirations-icon").css("color", "#FBF279");
-          if (!expire_is_loaded) {
-            checkExpirations();
-            expire_is_loaded = true;     
-          }
-        } 
-
-        function show_query_sessions_page(){
-          $(".page-wrapper").hide();
-          $(".sidebar-item").css("color","white")
-
-          $("#query-sessions-page").show();   
-          //$("#ml-Sidebar-check-reservations").css("color", "white");                      
-          $("#ml-Sidebar-query-sessions").css("color", "#FBF279");
-          if (!query_sessions_is_load) {
-            querySessions();
-            query_sessions_is_load = true;     
-          }
-        }            
-
-
-        function checkReservations(){
-          var startDateStr = $("#rsvQueryStartDate").val();
-          var endDateStr = $("#rsvQueryEndDate").val();
-
-          console.log(startDateStr, endDateStr);
-
-          var apiUrl = apiUrlBase + "?API=00" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
-
-          //console.log(apiUrl);
-
-          $.loading.start('讀取資料');
-          $.ajax({
-            url: apiUrl,
-            type: "GET",
-            dataType: "json",
-            success: function(returnData) {
-              //returnFromAPI = JSON.parse(JSON.stringify(returnData));
-              //console.log(returnFromAPI[0][3]);
-
-              rsvResult = returnData;
-
-              for (i=0; i< rsvResult.length; i++){
-                rsvResult[i][4] = rsvResult[i][3].substr(11,5)+'~'+rsvResult[i][4].substr(11,5);
-                rsvResult[i][3] = rsvResult[i][3].substr(0,10);
-              }
-
-
-              reservationsTable.clear();
-              reservationsTable.rows.add(rsvResult).draw();
-              $.loading.end();
-              $("#ml-Sidebar-check-reservations").css("color", "#FBF279");                
-              $("#sidebar-check-reservations-icon").css("color", "#FBF279");                
-            },
-
-            error: function() {
-              alert("Database READ ERROR!!!");
-            }
-          });             
-        }
-
-        function checkExpirations(){
-          var startDateStr = $("#expQueryStartDate").val();
-          var endDateStr = $("#expQueryEndDate").val();
-
-          console.log(startDateStr, endDateStr);
-
-          var apiUrl = apiUrlBase + "?API=01" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
-
-          //console.log(apiUrl);
-
-          $.loading.start('讀取資料');
-          $.ajax({
-            url: apiUrl,
-            type: "GET",
-            dataType: "json",
-            success: function(returnData) {
-              expResult = returnData;
-
-              for (i=0; i< expResult.length; i++){
-                expResult[i][5] = expResult[i][5].substr(0,10);
-                expResult[i][6] = expResult[i][6].substr(0,10);
-                expResult[i][7] = expResult[i][7].substr(0,10);
-              }
-
-              expirationsTable.clear();
-              expirationsTable.rows.add(expResult).draw();
-              $.loading.end();
-            },
-
-            error: function() {
-              alert("Database READ ERROR!!!");
-            }
-          });             
-        }
+        console.log("Wait for all pages loaded...");
         
-        function querySessions(){
-          
-          // Get settings of all Courses
-          
-          
-          
-          var startDateStr = $("#sessionQueryStartDate").val();
-          var endDateStr = $("#sessionQueryEndDate").val();
+      },100);
+                
+    </script>
+    
+    <style>
+      ::-webkit-calendar-picker-indicator {
+        filter: invert(0.5);
+      }
+    </style>
 
-          console.log(startDateStr, endDateStr);
-
-          var apiUrl = apiUrlBase + "?API=03" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr; // API=03 為只搜尋單一合約的 sessions
-
-          //console.log(apiUrl);
-
-          $.loading.start('讀取資料');
-          $.ajax({
-            url: apiUrl,
-            type: "GET",
-            dataType: "json",
-            success: function(returnData) {
-              //returnFromAPI = JSON.parse(JSON.stringify(returnData));
-              //console.log(returnFromAPI[0][3]);
-              
-              //querySessionsResult = JSON.parse(JSON.stringify(returnData));
-              var querySessionsResultRaw = JSON.parse(JSON.stringify(returnData));
-              console.log(querySessionsResultRaw);
-              querySessionsResult=[];
-              for (var i=0; i< querySessionsResultRaw.length; i++){
-                if (querySessionsResultRaw[i][30]==true) {
-                  querySessionsResult.push(querySessionsResultRaw[i]);
-                }
-              }
-              processContractSessionHistory();
-            },
-
-            error: function() {
-              alert("Database READ ERROR!!!");
-            }
-          });             
-        }
-        
-
-        async function getCourseSettings() {
-          
-          var apiUrl;       
-          
-
-          apiUrl = apiUrlBase + "?API=05"; 
-          await $.ajax({
-            url: apiUrl,
-            type: "GET",
-            dataType: "json",
-            success: function(returnData) {
-              for (var i=0; i< returnData.length; i++){
-                courseSettings[returnData[i][0]] = returnData[i][1];
-              }
-            },
-
-            error: function() {
-              alert("Database READ ERROR!!!");
-            }
-          }); 
-        }
-          
-          
-        
-        async function processContractSessionHistory() {
-          
-          var apiUrl;
-          
-          $.loading.end();
-          $.loading.start("讀取課程設定");
-          apiUrl = apiUrlBase + "?API=05"; 
-          await $.ajax({
-            url: apiUrl,
-            type: "GET",
-            dataType: "json",
-            success: function(returnData) {
-              for (var i=0; i< returnData.length; i++){
-                courseSettings[returnData[i][0]] = returnData[i][1];
-              }
-            },
-
-            error: function() {
-              alert("Database READ ERROR!!!");
-            }
-          });
-          
-          
-          // collect contracts need to be queried
-          var contractsToQuery=[];
-          for (i=0; i< querySessionsResult.length; i++){
-              contractsToQuery.push(querySessionsResult[i][5])
-          }
-          //console.log(contractsToQuery);          
-          
-          for (var j=0; j<contractsToQuery.length;j++) {
-            if (contractSessionHistory[querySessionsResult[j][4]]== undefined) {
-              apiUrl = apiUrlBase + "?API=04" + "&contractId=" + contractsToQuery[j]; 
-              
-              $.loading.end();$.loading.start("讀取合約:"+contractsToQuery[j]);
-              await $.ajax({
-                url: apiUrl,
-                type: "GET",
-                dataType: "json",
-                success: function(returnData) {
-                  contractSessionHistory[contractsToQuery[j]] = [];
-                  for (var i=0; i < returnData.length; i++) {
-                    contractSessionHistory[contractsToQuery[j]].push( returnData[i][0].substr(0,10) + " " + returnData[i][0].substr(11,5)+'~'+returnData[i][1].substr(11,5) );
-                  }
-                },
-
-                error: function() {
-                  alert("Database READ ERROR!!!");
-                }
-              }); 
-              //console.log(contractsToQuery[j], "  done"); 
-            }
-          }
-          
-          var currentDate="0000-00-00";
-          var sessionIndexForDay = 1;
-          var amountForDay=0;
-          var storeId = "TW-Xinyi";
-          for (i=0; i< querySessionsResult.length; i++){
-
-            // 處理日期和時間
-            querySessionsResult[i][1] = querySessionsResult[i][0].substr(11,5)+'~'+querySessionsResult[i][1].substr(11,5);
-            querySessionsResult[i][0] = querySessionsResult[i][0].substr(0,10);
-            
-                      
-            
-            // 合約時間_月 
-            querySessionsResult[i][8] = courseSettings[querySessionsResult[i][7]];
-
-            // 合約簽訂日期，Database ContractForms 裡的 ProcessTime
-            querySessionsResult[i][9] = querySessionsResult[i][9].substr(0,10);
-            
-            // 合約開始日期，Database ContractForms 裡的 CourseSessionFirstStartDate           
-            querySessionsResult[i][10] = querySessionsResult[i][10].substr(0,10);
-            
-            // 處理 合約到期日期
-              // 合約到期日期，Database ContractForms 裡的 ExpirationDate 
-              querySessionsResult[i][11] = querySessionsResult[i][11].substr(0,10);       
-
-              // 合約延伸到期日期，Database ContractForms 裡的 ExpirationDate 
-              querySessionsResult[i][31] = querySessionsResult[i][31].substr(0,10);   
-
-              // 如果有延伸，結合兩個日期
-              if (querySessionsResult[i][31] > "0001-01-01") {
-                querySessionsResult[i][11] = querySessionsResult[i][11] + "<br>Ext. " + querySessionsResult[i][31];
-              }
-            
-            
-            // 處理 合約已進行(月)
-            var startDate = new Date(querySessionsResult[i][9]);
-            var endDate = new Date(querySessionsResult[i][0]);
-            querySessionsResult[i][12] = Math.floor((endDate - startDate)/(864000*30))/100;
-
-            // 處理 合約總價(未稅)
-            //querySessionsResult[i][13] = Math.floor(parseFloat(querySessionsResult[i][13])*100)/100;  
-
-            // 處理 合約總價(未稅)
-            querySessionsResult[i][14] = parseFloat(querySessionsResult[i][13])/1.05;  
-
-            // 處理 合約已執行堂數                
-            var sessionDateTime = querySessionsResult[i][0]+ " " + querySessionsResult[i][1];
-            //if (contractSessionHistory[querySessionsResult[i][4]].length >0){
-            //  console.log(contractSessionHistory[querySessionsResult[i][4]].indexOf(sessionDateTime)+1);
-            //}
-
-            querySessionsResult[i][19] =contractSessionHistory[querySessionsResult[i][5]].indexOf(sessionDateTime)+1;
-
-            // 處理 開始後來店頻率，因為會用到 querySessionsResult[i][18]，所以才放在之後，
-            var usedMonth = (querySessionsResult[i][12] == 0)?1:querySessionsResult[i][12];
-            querySessionsResult[i][16] = parseFloat(querySessionsResult[i][19])/usedMonth;
-             
-
-            // 處理 合約剩餘堂數                
-            querySessionsResult[i][21] = querySessionsResult[i][18] - querySessionsResult[i][19];
-
-
-            // 處理 課程單價(含稅)               
-            querySessionsResult[i][22] = parseFloat(querySessionsResult[i][13])/parseFloat(querySessionsResult[i][18]);                 
-
-            // 處理 課程單價(未稅)              
-            querySessionsResult[i][23] = parseFloat(querySessionsResult[i][14])/parseFloat(querySessionsResult[i][18]);                
-
-            // 合約退會堂數, 退費金額/課程單價(含稅)
-            querySessionsResult[i][20] = querySessionsResult[i][20]/querySessionsResult[i][22];               
-            
-            
-            // 處理 合約已認列金額(含稅)
-            querySessionsResult[i][24] = (querySessionsResult[i][19] * parseFloat(querySessionsResult[i][13])) / 
-                                         parseFloat(querySessionsResult[i][18]);
-
-            // 處理 合約已認列金額(未稅)
-            querySessionsResult[i][25] = querySessionsResult[i][24] / 1.05;
-
-            // 處理 合約未認列金額(含稅)
-            querySessionsResult[i][26] = querySessionsResult[i][13] - querySessionsResult[i][24];
-
-            // 處理 合約未認列金額(未稅)
-            querySessionsResult[i][27] = querySessionsResult[i][14] - querySessionsResult[i][25];                
-            if ( querySessionsResult[i][2] != storeId) {
-              console.log("store change");
-              storeId = querySessionsResult[i][2];
-              currentDate = "0000-00-00";
-            }
-            
-            if (querySessionsResult[i][0] > currentDate) {
-              //console.log("new day");
-              currentDate = querySessionsResult[i][0];
-              sessionIndexForDay = 1;
-              querySessionsResult[i][17] = sessionIndexForDay++; 
-              // 當日認列金額(含稅)
-              querySessionsResult[i][28] = querySessionsResult[i][22];
-
-            
-            } else {
-              // 堂數排序 not implement yet
-              querySessionsResult[i][17] = sessionIndexForDay++; 
-              querySessionsResult[i][28] = querySessionsResult[i][22]+querySessionsResult[i-1][28];
-            }
-            
-            // 當日認列金額(未稅)
-            querySessionsResult[i][29] = querySessionsResult[i][28]/1.05;  
-                           
-          }
-
-          querySessionsTable.clear();
-          querySessionsTable.rows.add(querySessionsResult).draw();
-          $.loading.end();          
-          
-        }
-
-      </script>
-       
-      <style>
-        ::-webkit-calendar-picker-indicator {
-          filter: invert(0.5);
-        }
-      </style>
-        
-    </body>
+  </body>
 </html>
