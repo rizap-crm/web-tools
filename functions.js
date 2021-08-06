@@ -128,7 +128,7 @@ function rsvCheck(){
 
   //console.log(apiUrl);
 
-  $.loading.start('讀取資料');
+  $.loading.start($("#ml-讀取資料").text());
   $.ajax({
     url: apiUrl,
     type: "GET",
@@ -168,7 +168,7 @@ function expCheck(){
 
   //console.log(apiUrl);
 
-  $.loading.start('讀取資料');
+  $.loading.start($("#ml-讀取資料").text());
   $.ajax({
     url: apiUrl,
     type: "GET",
@@ -201,7 +201,7 @@ async function processContractSessionHistory() {
   var courseKeys = Object.keys(courseSettings);
   if (courseKeys.length==0){
     $.loading.end();
-    $.loading.start("讀取課程設定");
+    $.loading.start($("#ml-讀取課程設定").text());
     apiUrl = apiUrlBase + "?API=05"; 
     await $.ajax({
       url: apiUrl,
@@ -230,7 +230,7 @@ async function processContractSessionHistory() {
     if (contractSessionHistory[sessionResult[j][5]]== undefined) {
       apiUrl = apiUrlBase + "?API=04" + "&contractId=" + contractsToQuery[j]; 
 
-      $.loading.end();$.loading.start("讀取合約:"+contractsToQuery[j]);
+      $.loading.end();$.loading.start($("#ml-讀取合約").text()+":"+contractsToQuery[j]);
       await $.ajax({
         url: apiUrl,
         type: "GET",
@@ -374,7 +374,7 @@ function sessionCheck(){
 
   //console.log(apiUrl);
 
-  $.loading.start('讀取資料');
+  $.loading.start($("#ml-讀取資料").text());
   $.ajax({
     url: apiUrl,
     type: "GET",
@@ -409,7 +409,7 @@ async function processAdmissionFee() {
   var courseKeys = Object.keys(courseSettings);
   if (courseKeys.length==0){
     $.loading.end();
-    $.loading.start("讀取課程設定");
+    $.loading.start($("#ml-讀取課程設定").text());
     apiUrl = apiUrlBase + "?API=05"; 
     await $.ajax({
       url: apiUrl,
@@ -428,9 +428,13 @@ async function processAdmissionFee() {
   }
                 
   for (var i=0; i < admissionFeeResult.length; i++) {
-   // 處理日期和時間
-    admissionFeeResult[i][1] = admissionFeeResult[i][0].substr(11,5);
-    admissionFeeResult[i][0] = admissionFeeResult[i][0].substr(0,10);
+   // 處理日期和時間，這裡存的是 GMT+0，必須特別處理。其他日期是 GMT+8
+    var localDateTime = new Date(admissionFeeResult[i][0]);
+    var localDate = localDateTime.toLocaleDateString().replace(/\//g,"-");
+    var localTime = localDateTime.toLocaleTimeString();
+    
+    admissionFeeResult[i][0] = localDate;    
+    admissionFeeResult[i][1] = localTime;    
 
     // 合約時間_月 
     admissionFeeResult[i][8] = courseSettings[admissionFeeResult[i][7]];
@@ -472,7 +476,7 @@ function admissionFeeCheck(){
 
   //console.log(apiUrl);
 
-  $.loading.start('讀取資料');
+  $.loading.start($("#ml-讀取資料").text());
   $.ajax({
     url: apiUrl,
     type: "GET",
@@ -505,7 +509,7 @@ function productCheck(){
 
   //console.log(apiUrl);
 
-  $.loading.start('讀取資料');
+  $.loading.start($("#ml-讀取資料").text());
   $.ajax({
     url: apiUrl,
     type: "GET",
@@ -519,7 +523,7 @@ function productCheck(){
       }
       
       for (var i=0; i< productResult.length; i++) {
-       // 處理日期
+        // 處理日期
         productResult[i][0] = productResult[i][0].substr(0,10);     
         
         productResult[i][8] =  productResult[i][7]/1.05;          // 處理產品單價(未稅)
@@ -529,8 +533,9 @@ function productCheck(){
      
         // 付款方式
         if (productResult[i][15]!=null) {
-          if (productResult[i][15].includes("CreditCard")) productResult[i][15] = "信用卡";
-          if (productResult[i][15].includes("Cash")) productResult[i][15] = "現金";
+          if (productResult[i][15].includes("CreditCard")) productResult[i][15] = $("#ml-信用卡").text();
+          if (productResult[i][15].includes("Cash")) productResult[i][15] = $("#ml-現金").text();
+          if (productResult[i][15].includes("NoCardInstallment")) productResult[i][15] = $("#ml-無卡分期").text();
         }        
         
         // 發票種類
