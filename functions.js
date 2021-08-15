@@ -117,6 +117,35 @@ function show_query_productSales_page(){
   }  
 }         
 
+var aaa={};
+async function show_query_contracts_page(){
+  console.log("Show Year Contract");
+  
+  apiUrl = apiUrlBase + "?API=08"; 
+
+  //$.loading.end();$.loading.start($("");
+  await $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {
+      //contractSessionHistory[contractsToQuery[j]] = [];
+      for (var i=0; i < returnData.length; i++) {      
+        contractSessionHistory[returnData[i][0]]=[];
+      }
+      
+      for (var i=0; i < returnData.length; i++) {
+        contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+      }
+    },
+
+    error: function() {
+      alert("Database READ ERROR!!!");
+    }
+  }); 
+  
+}
+
 
 function rsvCheck(){
   var startDateStr = $("#rsvQueryStartDate").val();
@@ -388,7 +417,7 @@ function sessionCheck(){
       console.log(sessionResultRaw);
       sessionResult=[];
       for (var i=0; i< sessionResultRaw.length; i++){
-        if (sessionResultRaw[i][30]==true) {
+        if (sessionResultRaw[i][30]==true) { // RSV.[Check]
           sessionResult.push(sessionResultRaw[i]);
         }
       }
