@@ -556,26 +556,31 @@ function productCheck(){
         productResult[i][0] = productResult[i][0].substr(0,10);     
         
         productResult[i][8] =  productResult[i][7]/1.05;          // 處理產品單價(未稅)
-        productResult[i][11] = productResult[i][10]/1.05;         // 處理合約總價(未稅)
-        productResult[i][12] = productResult[i][12].substr(0,10); // 處理付款日         
-        productResult[i][14] = productResult[i][13]/1.05;         // 處理付款金額(未稅)  
+        
+        productResult[i][10] =  productResult[i][7] *  productResult[i][9]; // 處理小計(含稅)
+        productResult[i][11] =  productResult[i][8] *  productResult[i][9]; // 處理小計(未稅)
+        
+        
+        productResult[i][13] = productResult[i][12]/1.05;         // 處理合約總價(未稅)
+        productResult[i][14] = productResult[i][14].substr(0,10); // 處理付款日         
+        productResult[i][16] = productResult[i][15]/1.05;         // 處理付款金額(未稅)  
      
         // 付款方式
-        if (productResult[i][15]!=null) {
-          if (productResult[i][15].includes("CreditCard")) productResult[i][15] = $("#ml-信用卡").text();
-          if (productResult[i][15].includes("Cash")) productResult[i][15] = $("#ml-現金").text();
-          if (productResult[i][15].includes("NoCardInstallment")) productResult[i][15] = $("#ml-無卡分期").text();
+        if (productResult[i][17]!=null) {
+          if (productResult[i][17].includes("CreditCard")) productResult[i][17] = $("#ml-信用卡").text();
+          if (productResult[i][17].includes("Cash")) productResult[i][17] = $("#ml-現金").text();
+          if (productResult[i][17].includes("NoCardInstallment")) productResult[i][17] = $("#ml-無卡分期").text();
         }        
         
         // 發票種類
-        if (productResult[i][16]!=null) {
-          if (productResult[i][16].includes("Duplicate")) productResult[i][16] = "二聯式發票";
-          if (productResult[i][16].includes("Triplicate")) productResult[i][16] = "三聯式發票";
+        if (productResult[i][18]!=null) {
+          if (productResult[i][18].includes("Duplicate")) productResult[i][18] = "二聯式發票";
+          if (productResult[i][18].includes("Triplicate")) productResult[i][18] = "三聯式發票";
         }
 
         // 發票發行日期
-        productResult[i][17] = productResult[i][17].substr(0,10);              
-        if (productResult[i][17]=='0001-01-01') productResult[i][17] = "";        
+        productResult[i][19] = productResult[i][19].substr(0,10);              
+        if (productResult[i][19]=='0001-01-01') productResult[i][19] = "";        
       }
       
       productDataTable.clear();
