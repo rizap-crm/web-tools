@@ -1,5 +1,5 @@
 
-function loadPages(){
+async function loadPages(){
   $("#heading").load("./HtmlPages/heading.html", function(){
     console.log("heading loaded");
     headingLoaded = true;
@@ -43,7 +43,13 @@ function loadPages(){
     console.log("product-page loaded");
     productPageLoaded = true;
     //if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));          
-  });        
+  }); 
+  
+  $("#contract-page").load("./HtmlPages/contractPage.html", function(){
+    console.log("contract-page loaded");
+    contractPageLoaded = true;
+    //if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));          
+  });   
 
 }
 
@@ -117,35 +123,40 @@ function show_query_productSales_page(){
   }  
 }         
 
-var aaa={};
 async function show_query_contracts_page(){
   console.log("Show Year Contract");
   
+  $(".page-wrapper").hide();
+  $(".sidebar-item").css("color","white")
+
+  $("#contract-page").show();     
+  
   apiUrl = apiUrlBase + "?API=08"; 
 
-  //$.loading.end();$.loading.start($("");
-  await $.ajax({
-    url: apiUrl,
-    type: "GET",
-    dataType: "json",
-    success: function(returnData) {
-      //contractSessionHistory[contractsToQuery[j]] = [];
-      for (var i=0; i < returnData.length; i++) {      
-        contractSessionHistory[returnData[i][0]]=[];
-      }
-      
-      for (var i=0; i < returnData.length; i++) {
-        contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
-      }
-    },
+  if (Object.keys(contractSessionHistory).length==0){
+    await $.ajax({
+      url: apiUrl,
+      type: "GET",
+      dataType: "json",
+      success: function(returnData) {
+        //contractSessionHistory[contractsToQuery[j]] = [];
+        for (var i=0; i < returnData.length; i++) {      
+          contractSessionHistory[returnData[i][0]]=[];
+        }
 
-    error: function() {
-      alert("Database READ ERROR!!!");
-    }
-  }); 
-  
+        for (var i=0; i < returnData.length; i++) {
+          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+        }
+      },
+
+      error: function() {
+        alert("Database READ ERROR!!!");
+      }
+    }); 
+
+    console.log(contractSessionHistory);
+  }
 }
-
 
 function rsvCheck(){
   var startDateStr = $("#rsvQueryStartDate").val();
@@ -248,36 +259,63 @@ async function processContractSessionHistory() {
     });
   }
 
-  // collect contracts need to be queried
-  var contractsToQuery=[];
-  for (i=0; i< sessionResult.length; i++){
-      contractsToQuery.push(sessionResult[i][5])
+  if (Object.keys(contractSessionHistory).length==0){
+    // read all sessions of all contracts
+    apiUrl = apiUrlBase + "?API=08"; 
+    await $.ajax({
+      url: apiUrl,
+      type: "GET",
+      dataType: "json",
+      success: function(returnData) {
+        //contractSessionHistory[contractsToQuery[j]] = [];
+        for (var i=0; i < returnData.length; i++) {      
+          contractSessionHistory[returnData[i][0]]=[];
+        }
+
+        for (var i=0; i < returnData.length; i++) {
+          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+        }
+      },
+
+      error: function() {
+        alert("Database READ ERROR!!!");
+      }
+    });   
+    
+    console.log(contractSessionHistory);
   }
+  
+// No need anymore, since all sessions are read 
+// collect contracts need to be queried
+//  var contractsToQuery=[];
+//  for (i=0; i< sessionResult.length; i++){
+//      contractsToQuery.push(sessionResult[i][5])
+//  }
   //console.log(contractsToQuery);          
 
-  for (var j=0; j<contractsToQuery.length;j++) {
-    if (contractSessionHistory[sessionResult[j][5]]== undefined) {
-      apiUrl = apiUrlBase + "?API=04" + "&contractId=" + contractsToQuery[j]; 
-
-      $.loading.end();$.loading.start($("#ml-讀取合約").text()+":"+contractsToQuery[j]);
-      await $.ajax({
-        url: apiUrl,
-        type: "GET",
-        dataType: "json",
-        success: function(returnData) {
-          contractSessionHistory[contractsToQuery[j]] = [];
-          for (var i=0; i < returnData.length; i++) {
-            contractSessionHistory[contractsToQuery[j]].push( returnData[i][0].substr(0,10) + " " + returnData[i][0].substr(11,5)+'~'+returnData[i][1].substr(11,5) );
-          }
-        },
-
-        error: function() {
-          alert("Database READ ERROR!!!");
-        }
-      }); 
-      //console.log(contractsToQuery[j], "  done"); 
-    }
-  }
+//  for (var j=0; j<contractsToQuery.length;j++) {
+//    if (contractSessionHistory[sessionResult[j][5]]== undefined) {
+//      apiUrl = apiUrlBase + "?API=04" + "&contractId=" + contractsToQuery[j]; 
+//
+//      $.loading.end();$.loading.start($("#ml-讀取合約").text()+":"+contractsToQuery[j]);
+//      await $.ajax({
+//        url: apiUrl,
+//        type: "GET",
+//        dataType: "json",
+//        success: function(returnData) {
+//          contractSessionHistory[contractsToQuery[j]] = [];
+//          for (var i=0; i < returnData.length; i++) {
+//            contractSessionHistory[contractsToQuery[j]].push( returnData[i][0].substr(0,10) + " " + returnData[i][0].substr(11,5)+'~'+returnData[i][1].substr(11,5) );
+//          }
+//        },
+//
+//        error: function() {
+//          alert("Database READ ERROR!!!");
+//        }
+//      }); 
+//      //console.log(contractsToQuery[j], "  done"); 
+//    }
+//  }
 
   var currentDate="0000-00-00";
   var sessionIndexForDay = 1;
