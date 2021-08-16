@@ -102,6 +102,11 @@
       </div>
       <!-- /Product Page Wrapper -->	
       
+      <!-- Contract Page Wrapper -->
+      <div class="page-wrapper" id="contract-page">
+      </div>
+      <!-- /Contract Page Wrapper -->	
+      
     </div>
     <!-- /Main Wrapper -->
 
@@ -171,6 +176,7 @@
       var query_sessions_is_load = false;
       var query_admissionFee_is_load = false;
       var query_product_is_load = false;
+      var query_contract_is_load = false;
 
       // variables for Tables
       var rsvResult=[];
@@ -178,6 +184,7 @@
       var sessionResult=[];
       var admissionFeeResult=[];
       var productResult=[];
+      var contractResult=[];
       
       // variables for each page html load status
       var headingLoaded = false;
@@ -186,6 +193,8 @@
       var expirePageLoaded = false;
       var sessionPageLoaded = false;
       var adminFeePageLoaded = false;
+      var productPageLoaded = false;
+      var contractPageLoaded = false;
       loadPages();      
     
       // Program entry
