@@ -123,13 +123,47 @@ function show_query_productSales_page(){
   }  
 }         
 
+// 定義以下 array 的 count function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].count(2) => 3
+Object.defineProperties(Array.prototype, {
+    count: {
+        value: function(value) {
+            return this.filter(x => x==value).length;
+        }
+    }
+});
+
+// 定義以下 array 的 sum function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].sum() => 32
+Object.defineProperties(Array.prototype, {
+    sum: {
+        value: function(value) {
+            let sum =0;
+            for (var i=0; i<this.length;i++){
+              sum += this[i];
+            }
+            return sum;
+        }
+    }
+});
+
+
 async function show_query_contracts_page(){
   console.log("Show Year Contract");
   
   $(".page-wrapper").hide();
   $(".sidebar-item").css("color","white")
 
-  $("#contract-page").show();     
+  $("#contract-page").show();   
+  
+  var queryYear = $("#contractQueryStartDate").val();
+  //var queryYear = "2020";
+  var queryYear_plus1 = (parseInt(queryYear) + 1).toString();
+  var monthsInYear = ["-04","-05","-06","-07","-08","-09","-10","-11","-12","-01","-02","-03"];
+  for (var i=0; i< monthsInYear.length; i++){
+    monthsInYear[i] = (i<9)? queryYear+monthsInYear[i]:queryYear_plus1+monthsInYear[i];
+    
+  }
+  
+  console.log(monthsInYear);
   
   apiUrl = apiUrlBase + "?API=08"; 
 
@@ -145,8 +179,10 @@ async function show_query_contracts_page(){
         }
 
         for (var i=0; i < returnData.length; i++) {
-          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+          //contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,7) );
         }
+        
       },
 
       error: function() {
@@ -154,8 +190,39 @@ async function show_query_contracts_page(){
       }
     }); 
 
-    console.log(contractSessionHistory);
   }
+
+  var contractNos = Object.keys(contractSessionHistory);
+  sessionsInContract = {};
+
+  // Process sessions in each month
+  for (var i=0; i < contractNos.length; i++){
+    var sessionDetails = contractSessionHistory[contractNos[i]];
+    sessionsInContract[contractNos[i]]=[];
+    for (var j=0; j <monthsInYear.length; j++) {
+      sessionsInContract[contractNos[i]].push(sessionDetails.count(monthsInYear[j]));
+    }
+    sessionsInContract[contractNos[i]].push(-1*sessionsInContract[contractNos[i]].sum());
+  }  
+  
+  apiUrl = apiUrlBase + "?API=09&ContractYear="+queryYear;  
+  await $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {
+      contractResult = JSON.parse(JSON.stringify(returnData));
+      console.log(contractResult);
+      
+      contractDataTable.clear();
+      contractDataTable.rows.add(contractResult).draw();
+    },
+
+    error: function() {
+      alert("Database READ ERROR!!!");
+    }
+  });     
+  
 }
 
 function rsvCheck(){
@@ -285,7 +352,7 @@ async function processContractSessionHistory() {
     console.log(contractSessionHistory);
   }
   
-// No need anymore, since all sessions are read 
+// No need anymore, since all sessions are read in advance
 // collect contracts need to be queried
 //  var contractsToQuery=[];
 //  for (i=0; i< sessionResult.length; i++){
