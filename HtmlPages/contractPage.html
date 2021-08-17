@@ -7,13 +7,13 @@
         <span class='page-title-icon bg-gradient-primary text-white'>
           <i class='fa fa-check-square-o' aria-hidden='true'></i> <!--icon 視需要修改-->
         </span>
-        <span id='ml-查詢合約狀態'>店鋪</span>
+        <span id='ml-查詢合約狀態'>查詢合約狀態</span>
       </h3>
     </div>
   </div>
   <!-- 顯示/隱藏 欄位 選擇 Modal -->
   <div class='modal' id='contractSelHideColumn' tabindex='-1' role='dialog' aria-labelledby='ml-選擇顯示欄位' aria-hidden='true'>
-    <div class='modal-dialog modal-xl' role='document'>
+    <div class='modal-dialog' role='document'>
       <div class='modal-content'>
         <div class='modal-header'>
           <h4 class='modal-title' id='ml-選擇顯示欄位'>Modal title</h4>
@@ -48,14 +48,12 @@
   </div>
 
   <div style='margin: 10px'>
+    <span style='margin-left:0px' id ='ml-查詢年度'>查詢年度</span>
+    <input id='contractQueryStartDate' style="width:50px"/>
 <!--
-    <span style='margin-left:0px' id ='ml-開始日期'>開始日期</span>
-    <input id='contractQueryStartDate' type='date' />
     <span style='margin-left:30px' id ='ml-結束日期'>結束日期</span>
     <input id='contractQueryEndDate' type='date'/>
 -->
-    <span style='margin-left:0px' id ='ml-查詢年度'>查詢年度</span>
-    <input id='contractQueryStartDate' size=1 style="padding-left:10px" />       
         
     <button style='margin-left:30px' class='btn-gradient-primary font-weight-bold' onclick='contractCheck()' >
       <span id='ml-檢查'>檢 查</span>
@@ -82,7 +80,7 @@
                   <th id='ml-客戶名字'>店鋪名稱</th>
                   <th id='ml-客戶編號'>店鋪名稱</th>
                   <th id='ml-合約編號'>店鋪名稱</th>
-                  <th id='ml-簽約員工'>店鋪名稱</th>
+                  <th id='ml-負責教練'>店鋪名稱</th>
                   <th id='ml-合約名稱'>店鋪名稱</th>
                   <th id='ml-合約簽訂日期'>店鋪名稱</th>
                   <th id='ml-合約總價_含稅'>店鋪名稱</th>
@@ -190,8 +188,7 @@
     }
 
     $('#contractQueryStartDate').val(today.toISOString().substr(0,4));
-    //$('#contractQueryStartDate').val(today.toISOString().substr(0,10));
-    //$('#contractQueryEndDate').val(today.toISOString().substr(0,10));  
+    $('#contractQueryEndDate').val(today.toISOString().substr(0,10));  
     
     var contractDataTable =$('#contractDataTable').DataTable( {
       dom: 'Bfrtip',
@@ -199,17 +196,24 @@
         { 'extend': 'csv', 'text':'<span id="ml-匯出CSV">匯出 CSV</span>','className': 'btn-gradient-primary font-weight-bold' },
         { 'extend': 'excel', 'text':'<span id="ml-匯出EXCEL">匯出 EXCEL</span>','className': 'btn-gradient-primary font-weight-bold' }
       ], 
-      order: [[ 0, 'asc' ]], //請自行修改
+      order: [[ 0, 'asc' ],[3, 'asc' ]], 
       data: contractResult,  
       columnDefs: [
+        { // 小數點下兩位
+          targets: [7,8,15,16,18,19,20,21,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,64,65,71,72,],
+          render: $.fn.dataTable.render.number(',', '.', 2)
+        },
+        { // 靠右對齊
+          targets: [7,8,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,64,65,71,72,],
+          className: 'number-to-right'
+        },
       ] 
     } );
     // 處理 顯示/隱藏 的 modal 裡的項目
     var contractCol_nums = contractDataTable.columns()[0].length;
-    for (var i=0; i< contractCol_nums; i+=3 ){
+    for (var i=0; i< contractCol_nums; i+=2 ){
       var name_0= contractDataTable.column(i).header().outerHTML.split('\"')[1]; 
       if ((i+1) < contractCol_nums) var name_1 = contractDataTable.column(i+1).header().outerHTML.split('\"')[1];
-      if ((i+2) < contractCol_nums) var name_2 = contractDataTable.column(i+2).header().outerHTML.split('\"')[1];
       var appendHTML=
       `<div class='row'>
           <div class='col'>
@@ -224,13 +228,6 @@
           </div>
       `;
         
-      appendHTML+= ((i+2) >= contractCol_nums)?'':
-      `   <div class='col'>
-            <input id='contractCol_${i+2}' type='checkbox' checked=true /> 
-            <span id='${name_2}'></span>
-          </div>
-      `;
-      
       $('#contract_modal').append(appendHTML);
     }
         

@@ -123,28 +123,6 @@ function show_query_productSales_page(){
   }  
 }         
 
-// 定義以下 array 的 count function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].count(2) => 3
-Object.defineProperties(Array.prototype, {
-    count: {
-        value: function(value) {
-            return this.filter(x => x==value).length;
-        }
-    }
-});
-
-// 定義以下 array 的 sum function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].sum() => 32
-Object.defineProperties(Array.prototype, {
-    sum: {
-        value: function(value) {
-            let sum =0;
-            for (var i=0; i<this.length;i++){
-              sum += this[i];
-            }
-            return sum;
-        }
-    }
-});
-
 
 async function show_query_contracts_page(){
   console.log("Show Year Contract");
@@ -154,75 +132,11 @@ async function show_query_contracts_page(){
 
   $("#contract-page").show();   
   
-  var queryYear = $("#contractQueryStartDate").val();
-  //var queryYear = "2020";
-  var queryYear_plus1 = (parseInt(queryYear) + 1).toString();
-  var monthsInYear = ["-04","-05","-06","-07","-08","-09","-10","-11","-12","-01","-02","-03"];
-  for (var i=0; i< monthsInYear.length; i++){
-    monthsInYear[i] = (i<9)? queryYear+monthsInYear[i]:queryYear_plus1+monthsInYear[i];
-    
-  }
-  
-  console.log(monthsInYear);
-  
-  apiUrl = apiUrlBase + "?API=08"; 
-
-  if (Object.keys(contractSessionHistory).length==0){
-    await $.ajax({
-      url: apiUrl,
-      type: "GET",
-      dataType: "json",
-      success: function(returnData) {
-        //contractSessionHistory[contractsToQuery[j]] = [];
-        for (var i=0; i < returnData.length; i++) {      
-          contractSessionHistory[returnData[i][0]]=[];
-        }
-
-        for (var i=0; i < returnData.length; i++) {
-          //contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
-          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,7) );
-        }
-        
-      },
-
-      error: function() {
-        alert("Database READ ERROR!!!");
-      }
-    }); 
-
-  }
-
-  var contractNos = Object.keys(contractSessionHistory);
-  sessionsInContract = {};
-
-  // Process sessions in each month
-  for (var i=0; i < contractNos.length; i++){
-    var sessionDetails = contractSessionHistory[contractNos[i]];
-    sessionsInContract[contractNos[i]]=[];
-    for (var j=0; j <monthsInYear.length; j++) {
-      sessionsInContract[contractNos[i]].push(sessionDetails.count(monthsInYear[j]));
-    }
-    sessionsInContract[contractNos[i]].push(-1*sessionsInContract[contractNos[i]].sum());
+  $("#ml-Sidebar-query-contracts").css("color", "#FBF279");
+  if (!query_contract_is_load) {
+    contractCheck();
+    query_contract_is_load = true;     
   }  
-  
-  apiUrl = apiUrlBase + "?API=09&ContractYear="+queryYear;  
-  await $.ajax({
-    url: apiUrl,
-    type: "GET",
-    dataType: "json",
-    success: function(returnData) {
-      contractResult = JSON.parse(JSON.stringify(returnData));
-      console.log(contractResult);
-      
-      contractDataTable.clear();
-      contractDataTable.rows.add(contractResult).draw();
-    },
-
-    error: function() {
-      alert("Database READ ERROR!!!");
-    }
-  });     
-  
 }
 
 function rsvCheck(){
@@ -650,7 +564,7 @@ function productCheck(){
     dataType: "json",
     success: function(returnData) {
       var productResultRaw = JSON.parse(JSON.stringify(returnData));
-      console.log(productResultRaw);
+      //console.log(productResultRaw);
       productResult=[];
       for (var i=0; i< productResultRaw.length; i++){
           productResult.push(productResultRaw[i]);
@@ -672,11 +586,12 @@ function productCheck(){
      
         // 付款方式
         if (productResult[i][17]!=null) {
-          if (productResult[i][17].includes("CreditCard")) productResult[i][17] = $("#ml-信用卡").text();
+          if (productResult[i][17].includes("PriceByCreditCard")) productResult[i][17] = $("#ml-信用卡").text();
           if (productResult[i][17].includes("Cash")) productResult[i][17] = $("#ml-現金").text();
           if (productResult[i][17].includes("NoCardInstallment")) productResult[i][17] = $("#ml-無卡分期").text();
         }        
         
+ 
         // 發票種類
         if (productResult[i][18]!=null) {
           if (productResult[i][18].includes("Duplicate")) productResult[i][18] = "二聯式發票";
@@ -697,4 +612,303 @@ function productCheck(){
       alert("Database READ ERROR!!!");
     }
   });             
+}
+
+// 定義以下 array 的 count function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].count(2) => 3
+Object.defineProperties(Array.prototype, {
+    count: {
+        value: function(value) {
+            return this.filter(x => x==value).length;
+        }
+    }
+});
+
+// 定義以下 array 的 less function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].less(5) => 5
+Object.defineProperties(Array.prototype, {
+    less: {
+        value: function(value) {
+            return this.filter(x => x<value).length;
+        }
+    }
+});
+
+// 定義以下 array 的 sum function，就可以使用 [1, 2, 3, 5, 2, 8, 9, 2].sum() => 32
+Object.defineProperties(Array.prototype, {
+    sum: {
+        value: function(value) {
+            let sum =0;
+            for (var i=0; i<this.length;i++){
+              sum += this[i];
+            }
+            return sum;
+        }
+    }
+});
+
+
+async function contractCheck(){
+  
+  var queryYear = $("#contractQueryStartDate").val().substr(0,4);
+  //var queryYear = "2020";
+  var queryYear_plus1 = (parseInt(queryYear) + 1).toString();
+  var monthsInYear = ["-04","-05","-06","-07","-08","-09","-10","-11","-12","-01","-02","-03"];
+  for (var i=0; i< monthsInYear.length; i++){
+    monthsInYear[i] = (i<9)? queryYear+monthsInYear[i]:queryYear_plus1+monthsInYear[i];
+    
+  }
+  
+  console.log(monthsInYear);
+  
+  $.loading.start($("#ml-讀取資料").text());
+  apiUrl = apiUrlBase + "?API=08"; // 讀取 contracts 的 sessions
+  
+  if (Object.keys(contractSessionHistory).length==0){
+    await $.ajax({
+      url: apiUrl,
+      type: "GET",
+      dataType: "json",
+      success: function(returnData) {
+        //contractSessionHistory[contractsToQuery[j]] = [];
+        for (var i=0; i < returnData.length; i++) {      
+          contractSessionHistory[returnData[i][0]]=[];
+        }
+
+        for (var i=0; i < returnData.length; i++) {
+          //contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,10) + " " + returnData[i][1].substr(11,5)+'~'+returnData[i][2].substr(11,5) );
+          contractSessionHistory[returnData[i][0]].push( returnData[i][1].substr(0,7) );
+        }
+        
+      },
+
+      error: function() {
+        alert("Database READ ERROR!!!");
+      }
+    }); 
+
+  }
+
+  var contractNos = Object.keys(contractSessionHistory);
+  sessionsInContractByMonth = {};
+
+  // Process sessions in each month
+  for (var i=0; i < contractNos.length; i++){
+    var sessionDetails = contractSessionHistory[contractNos[i]];
+    sessionsInContractByMonth[contractNos[i]]=[];
+    for (var j=0; j <monthsInYear.length; j++) {
+      sessionsInContractByMonth[contractNos[i]].push(sessionDetails.count(monthsInYear[j]));
+    }
+    //sessionsInContractByMonth[contractNos[i]].push(-1*sessionsInContractByMonth[contractNos[i]].sum());
+  }  
+  
+  
+  apiUrl = apiUrlBase + "?API=10&ContractYear="+queryYear; // 讀取 sales 的 sessions
+  
+  await $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {
+      sessionsInSalesRaw = JSON.parse(JSON.stringify(returnData));
+      
+      sessionsInSales = {};
+      for (var i=0; i< sessionsInSalesRaw.length; i++){
+        sessionsInSales[sessionsInSalesRaw[i][4]]=sessionsInSalesRaw[i];
+      }
+
+    },
+
+    error: function() {
+      alert("Database READ ERROR!!!");
+    }
+  }); 
+
+  
+  apiUrl = apiUrlBase + "?API=09&ContractYear="+queryYear;  
+  await $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {
+      contractResultRaw = JSON.parse(JSON.stringify(returnData));
+      console.log(queryYear+"-04", contractResultRaw.length);
+    },
+
+    error: function() {
+      alert("Database READ ERROR!!!");
+    }
+  });   
+  
+  $.loading.end();  
+  
+
+  
+  // processing data
+  contractResult=[];
+    
+  for (var i=0; i< contractResultRaw.length; i++ ){ 
+    // 合約簽訂日期比指定下一個年度早
+    if ((contractResultRaw[i][6] < (parseInt(queryYear)+1).toString()+"-04") 
+      && ( true
+//          (contractResultRaw[i][9].includes("On Work")) 
+//       || (contractResultRaw[i][9].includes("Contracted"))
+//       || (contractResultRaw[i][9].includes("Completed"))
+//       || (contractResultRaw[i][9].includes("Withdrew"))
+       )
+    )
+    {
+      if (contractResultRaw[i][9].includes("Completed") ||contractResultRaw[i][9].includes("Withdrew")) {
+        
+        if (sessionsInSales[contractResultRaw[i][3]]==undefined) { // Withdrew and no sales records
+          console.log("No sales in ", contractResultRaw[i][3]);
+          contractResultRaw[i][9] = contractResultRaw[i][9] + "<br> at" +contractResultRaw[i][76].substr(0,10);
+        } else { // Withdrew/Completed with sales records
+          var finalDateInSales = sessionsInSales[contractResultRaw[i][3]][0].substr(0,10);
+          contractResultRaw[i][9] = contractResultRaw[i][9] + "<br> at " + finalDateInSales;
+          
+          if ( (finalDateInSales > queryYear+"-04") && (finalDateInSales < (parseInt(queryYear)+1).toString()+"-04")) {
+            console.log(contractResultRaw[i][3], "is completed/withdrew in ",queryYear);
+          } else {
+            console.log(contractResultRaw[i][3], "is not completed/withdrew in ",queryYear);
+          }
+        }
+      }
+      
+      contractResult.push(contractResultRaw[i]);
+    }
+  }
+  
+  for (var i=0; i < contractResult.length; i++) {
+    
+    // 合約簽訂日期
+    contractResult[i][6]=contractResult[i][6].substr(0,10);
+    
+    // 合約總價(未稅)
+    contractResult[i][8]=contractResult[i][7]/1.05;
+    
+    // 合約已執行堂數
+    if (contractSessionHistory[contractResult[i][3]] == undefined) {
+      contractResult[i][11]="no data";
+    } else {
+      contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;
+    }
+    
+    // 合約退費堂數 - 尚未處理
+    contractResult[i][13] = "尚未處理";
+    
+    // 合約取消堂數 - 尚未處理
+    contractResult[i][14] = "尚未處理";
+    
+    // 課程單價(含稅)
+    contractResult[i][15] = contractResult[i][7]/contractResult[i][10]; 
+
+    // 課程單價(未稅)
+    contractResult[i][16] = contractResult[i][15]/1.05; 
+
+    if (contractSessionHistory[contractResult[i][3]] == undefined) {
+
+    } else {
+
+    }
+    
+    // 比對使用課程
+    if (contractSessionHistory[contractResult[i][3]] == undefined) {
+      for (var j = 17; j<52; j++) contractResult[i][j]="no data";          
+    } else {
+      // 前年度合約剩餘堂數 = 合約堂數 - 前年度用掉的堂數      
+      contractResult[i][17]=contractResult[i][10] - contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
+      
+      // 3/31 之前已認列金額(含稅) = 前年度用掉的堂數 * 課程單價
+      contractResult[i][18]=contractResult[i][15] * contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
+      
+      // 3/31 之前已認列金額(未稅) = 3/31 之前已認列金額(含稅)/1.05
+      contractResult[i][19]=contractResult[i][18]/1.05;      
+      
+      // 3/31 之前合約剩餘金額(含稅) = 合約總價(含稅) - 3/31 之前已認列金額(含稅)
+      contractResult[i][20] = contractResult[i][7] - contractResult[i][18];
+      
+      // 3/31 之前合約剩餘金額(未稅) = 3/31 之前合約剩餘金額(含稅)/1.05
+      contractResult[i][21] = contractResult[i][20]/1.05;   
+      
+      // 今年 4 月 ~ 明年 3 月使用堂數
+      for (var j = 22; j<34; j++) contractResult[i][j]=sessionsInContractByMonth[contractResult[i][3]][j-22];
+      
+      // 前年度未認列(含稅) - 尚未處理
+      contractResult[i][34] = "尚未處理";      
+      
+      // 前年度未認列(未稅) - 尚未處理
+      contractResult[i][35] = "尚未處理";        
+      
+      // 今年 4 月 ~ 明年 3 月已認列(含稅) = 課程單價(含稅) * 已使用堂數
+      for (var j = 36; j<48; j++) contractResult[i][j]= contractResult[i][15] * contractResult[i][j-14];     
+      
+      // 合約已認列金額(含稅) = 合約單價(含稅) * 已執行堂數
+      contractResult[i][48]= contractResult[i][15] * contractResult[i][11]; 
+      
+      // 合約已認列金額(未稅) = 合約已認列金額(含稅)/1.05;
+      contractResult[i][49]= contractResult[i][48]/1.05;       
+      
+      // 合約未認列金額(含稅) = 合約總價(含稅) - 合約已認列金額(含稅)
+      contractResult[i][50]= contractResult[i][7] - contractResult[i][48]; 
+      
+      // 合約未認列金額(未稅) = 合約未認列金額(含稅)/1.05;
+      contractResult[i][51]= contractResult[i][50]/1.05;         
+      
+    }    
+       
+    for (var j =56; j<62; j++) contractResult[i][j] = "尚未處理";
+    
+    // 顧客已付金額(含稅) 累進
+    contractResult[i][52] = contractResult[i][64];
+    if (i>0 && contractResult[i][3] == contractResult[i-1][3]){
+      contractResult[i][52] = contractResult[i][64] + contractResult[i-1][52];;
+      
+    }
+    
+    // 顧客已付金額(未稅) = 顧客已付金額(含稅)/1.05
+    contractResult[i][53] = contractResult[i][52]/1.05;
+    
+    // 顧客尚未付金額(含稅) = 合約總價(含稅) - 顧客已付金額(含稅)
+    contractResult[i][54] = contractResult[i][7] - contractResult[i][52];
+    
+    // 顧客尚未付金額(未稅) = 顧客尚未付金額(含稅)/1.05
+    contractResult[i][55] = contractResult[i][54]/1.05;    
+
+    // 付款日 和 發票日期
+    contractResult[i][62] = contractResult[i][62].substr(0,10);
+    contractResult[i][67] = contractResult[i][67].substr(0,10);
+    contractResult[i][69] = contractResult[i][69].substr(0,10);
+    contractResult[i][74] = contractResult[i][74].substr(0,10);
+    
+    // 付款方式
+    if (contractResult[i][63]!=null ) {
+      if (contractResult[i][63].includes("PriceByCreditCard")) contractResult[i][63] = $("#ml-信用卡").text();
+      if (contractResult[i][63].includes("Cash")) contractResult[i][63] = $("#ml-現金").text();
+      if (contractResult[i][63].includes("NoCardInstallment")) contractResult[i][63] = $("#ml-無卡分期").text();
+    }     
+    if (contractResult[i][70]!=null) {
+      if (contractResult[i][70].includes("PriceByCreditCard")) contractResult[i][70] = $("#ml-信用卡").text();
+      if (contractResult[i][70].includes("Cash")) contractResult[i][70] = $("#ml-現金").text();
+      if (contractResult[i][70].includes("NoCardInstallment")) contractResult[i][70] = $("#ml-無卡分期").text();
+    }      
+
+    // 付款金額(未稅) = 付款金額(含稅)/1.05
+    contractResult[i][65] = contractResult[i][64]/1.05;
+    contractResult[i][72] = contractResult[i][71]/1.05;
+    
+    // 發票種類
+    if (contractResult[i][66]!=null) {
+      if (contractResult[i][66].includes("Duplicate")) contractResult[i][66] = "二聯式發票";
+      if (contractResult[i][66].includes("Triplicate")) contractResult[i][66] = "三聯式發票";
+    }
+    if (contractResult[i][73]!=null) {
+      if (contractResult[i][73].includes("Duplicate")) contractResult[i][73] = "二聯式發票";
+      if (contractResult[i][73].includes("Triplicate")) contractResult[i][73] = "三聯式發票";
+    }    
+    
+  }
+  
+      
+  contractDataTable.clear();
+  contractDataTable.rows.add(contractResult).draw();  
+  
 }
