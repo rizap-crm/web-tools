@@ -359,18 +359,19 @@ async function processContractSessionHistory() {
 
 
     // 處理 課程單價(含稅)               
-    sessionResult[i][22] = parseFloat(sessionResult[i][13])/parseFloat(sessionResult[i][18]);                 
+    sessionResult[i][22] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][33]))/parseFloat(sessionResult[i][18]);                 
 
     // 處理 課程單價(未稅)              
-    sessionResult[i][23] = parseFloat(sessionResult[i][14])/parseFloat(sessionResult[i][18]);                
+//    sessionResult[i][23] = (parseFloat(sessionResult[i][14])/parseFloat(sessionResult[i][18]);                
+    sessionResult[i][23] = sessionResult[i][22]/1.05;                
 
     // 合約退會堂數, 退費金額/課程單價(含稅)
     sessionResult[i][20] = sessionResult[i][20]/sessionResult[i][22];               
 
 
-    // 處理 合約已認列金額(含稅)
-    sessionResult[i][24] = (sessionResult[i][19] * parseFloat(sessionResult[i][13])) / 
-                                 parseFloat(sessionResult[i][18]);
+    // 處理 合約已認列金額(含稅) = 已執行堂數 * 課程單價(含稅) + 入會費(含稅)
+    //sessionResult[i][24] = (sessionResult[i][19] * parseFloat(sessionResult[i][13])) / parseFloat(sessionResult[i][18]);
+    sessionResult[i][24] = sessionResult[i][19]*sessionResult[i][22] + parseFloat(sessionResult[i][33]);
 
     // 處理 合約已認列金額(未稅)
     sessionResult[i][25] = sessionResult[i][24] / 1.05;
@@ -657,7 +658,7 @@ async function contractCheck(){
     
   }
   
-  console.log(monthsInYear);
+  //console.log(monthsInYear);
   
   $.loading.start($("#ml-讀取資料").text());
   apiUrl = apiUrlBase + "?API=08"; // 讀取 contracts 的 sessions
@@ -711,8 +712,14 @@ async function contractCheck(){
       sessionsInSalesRaw = JSON.parse(JSON.stringify(returnData));
       
       sessionsInSales = {};
+      sumSessionsInSales= {};
+      for (var i=0; i< sessionsInSalesRaw.length; i++){
+        sumSessionsInSales[sessionsInSalesRaw[i][4]]=[];
+      }
+      
       for (var i=0; i< sessionsInSalesRaw.length; i++){
         sessionsInSales[sessionsInSalesRaw[i][4]]=sessionsInSalesRaw[i];
+        sumSessionsInSales[sessionsInSalesRaw[i][4]].push(sessionsInSalesRaw[i]);
       }
 
     },
@@ -744,8 +751,12 @@ async function contractCheck(){
   
   // processing data
   contractResult=[];
-    
+  var addTocontractResult;  
   for (var i=0; i< contractResultRaw.length; i++ ){ 
+    
+    addTocontractResult= true;
+    var finalDateInSales;
+    
     // 合約簽訂日期比指定下一個年度早
     if ((contractResultRaw[i][6] < (parseInt(queryYear)+1).toString()+"-04") 
       && ( true
@@ -758,22 +769,24 @@ async function contractCheck(){
     {
       if (contractResultRaw[i][9].includes("Completed") ||contractResultRaw[i][9].includes("Withdrew")) {
         
+        var sessionsTmp = sessionsInSales[contractResultRaw[i][3]];
         if (sessionsInSales[contractResultRaw[i][3]]==undefined) { // Withdrew and no sales records
-          console.log("No sales in ", contractResultRaw[i][3]);
-          contractResultRaw[i][9] = contractResultRaw[i][9] + "<br> at" +contractResultRaw[i][76].substr(0,10);
+          //console.log("No sales in ", contractResultRaw[i][3]);
+          finalDateInSales = contractResultRaw[i][76].substr(0,10);
+          contractResultRaw[i][9] = contractResultRaw[i][9] + "<br> at" +finalDateInSales;
         } else { // Withdrew/Completed with sales records
-          var finalDateInSales = sessionsInSales[contractResultRaw[i][3]][0].substr(0,10);
+          finalDateInSales = sessionsInSales[contractResultRaw[i][3]][0].substr(0,10);
           contractResultRaw[i][9] = contractResultRaw[i][9] + "<br> at " + finalDateInSales;
-          
-          if ( (finalDateInSales > queryYear+"-04") && (finalDateInSales < (parseInt(queryYear)+1).toString()+"-04")) {
-            console.log(contractResultRaw[i][3], "is completed/withdrew in ",queryYear);
-          } else {
-            console.log(contractResultRaw[i][3], "is not completed/withdrew in ",queryYear);
-          }
         }
+        
+        if ( (finalDateInSales < queryYear+"-04")) {
+          //console.log(contractResultRaw[i][3], "is completed/withdrew before ",queryYear);
+          addTocontractResult = false;
+        }   
+        
       }
       
-      contractResult.push(contractResultRaw[i]);
+      if (addTocontractResult) contractResult.push(contractResultRaw[i]);
     }
   }
   
@@ -799,7 +812,7 @@ async function contractCheck(){
     contractResult[i][14] = "尚未處理";
     
     // 課程單價(含稅)
-    contractResult[i][15] = contractResult[i][7]/contractResult[i][10]; 
+    contractResult[i][15] = (contractResult[i][7]-contractResult[i][77])/contractResult[i][10]; //需扣掉入會費
 
     // 課程單價(未稅)
     contractResult[i][16] = contractResult[i][15]/1.05; 
