@@ -1,1 +1,1 @@
-local_api = false;
+local_api = true;

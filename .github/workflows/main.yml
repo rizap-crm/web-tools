@@ -33,5 +33,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           #touch config.js
-          #echo "local_api = false;" > config.js
+          echo "local_api = false;" > config.js
           cat config.js
