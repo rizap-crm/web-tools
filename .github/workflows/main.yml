@@ -35,3 +35,4 @@ jobs:
           touch config.js
           echo "local_api = false;" > config.js
           cat config.js
+          cat test
