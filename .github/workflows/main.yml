@@ -34,3 +34,4 @@ jobs:
         run: |
           touch .env
           echo "LOCAL_API='FALSE'" > .env
+          cat .env
