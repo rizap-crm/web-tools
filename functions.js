@@ -348,6 +348,10 @@ async function processContractSessionHistory() {
     //}
 
     sessionResult[i][19] =contractSessionHistory[sessionResult[i][5]].indexOf(sessionDateTime)+1;
+    
+    // 合約狀態 - 資料庫得到的 合約狀態 是執行程式時的狀態，而非當初 session 時的狀態
+    // 根據 合約堂數 和 合約已執行堂數 來判斷
+    sessionResult[i][15] = ((sessionResult[i][18] - sessionResult[i][19])==0)?"Completed":"On Work";
 
     // 處理 開始後來店頻率，因為會用到 sessionResult[i][18]，所以才放在之後，
     var usedMonth = (sessionResult[i][12] == 0)?1:sessionResult[i][12];
