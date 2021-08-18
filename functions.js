@@ -346,16 +346,17 @@ async function processContractSessionHistory() {
     //if (contractSessionHistory[sessionResult[i][4]].length >0){
     //  console.log(contractSessionHistory[sessionResult[i][4]].indexOf(sessionDateTime)+1);
     //}
-
     sessionResult[i][19] =contractSessionHistory[sessionResult[i][5]].indexOf(sessionDateTime)+1;
-
+    
     // 處理 開始後來店頻率，因為會用到 sessionResult[i][18]，所以才放在之後，
     var usedMonth = (sessionResult[i][12] == 0)?1:sessionResult[i][12];
     sessionResult[i][16] = parseFloat(sessionResult[i][19])/usedMonth;
 
-
     // 處理 合約剩餘堂數                
     sessionResult[i][21] = sessionResult[i][18] - sessionResult[i][19];
+    
+    // 處理 合約狀態, RIZAP 要反映課程時合約狀態
+    sessionResult[i][15] = (sessionResult[i][21]==0)?"Completed":"On Work";
 
 
     // 處理 課程單價(含稅) = (合約總價 - 入會費)/堂數
@@ -365,7 +366,7 @@ async function processContractSessionHistory() {
 //    sessionResult[i][23] = (parseFloat(sessionResult[i][14])/parseFloat(sessionResult[i][18]);                
     sessionResult[i][23] = sessionResult[i][22]/1.05;                
 
-    // 合約退會堂數, 退費金額/課程單價(含稅)
+    // 合約退費堂數, 退費金額/課程單價(含稅)
     sessionResult[i][20] = sessionResult[i][20]/sessionResult[i][22];               
 
 
