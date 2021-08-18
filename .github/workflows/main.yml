@@ -33,5 +33,5 @@ jobs:
       - name: Run a multi-line script
         run: |
           cat config.js
-          echo "local_api = false;" > config.js
+          sed -i 's/true/false/' config.js
           cat config.js
