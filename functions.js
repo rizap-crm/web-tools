@@ -353,35 +353,40 @@ async function processContractSessionHistory() {
     sessionResult[i][16] = parseFloat(sessionResult[i][19])/usedMonth;
 
     // 處理 合約剩餘堂數                
-    sessionResult[i][21] = sessionResult[i][18] - sessionResult[i][19];
+//    sessionResult[i][21] = sessionResult[i][18] - sessionResult[i][19];
+    sessionResult[i][20] = sessionResult[i][18] - sessionResult[i][19];
     
     // 處理 合約狀態, RIZAP 要反映課程時合約狀態
-    sessionResult[i][15] = (sessionResult[i][21]==0)?"Completed":"On Work";
-
+//    sessionResult[i][15] = (sessionResult[i][21]==0)?"Completed":"On Work";
+    sessionResult[i][15] = (sessionResult[i][20]==0)?"Completed":"On Work";
 
     // 處理 課程單價(含稅) = (合約總價 - 入會費)/堂數
-    sessionResult[i][22] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][33]))/parseFloat(sessionResult[i][18]);                 
+//    sessionResult[i][22] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][33]))/parseFloat(sessionResult[i][18]);                 
+    sessionResult[i][21] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][32]))/parseFloat(sessionResult[i][18]);                 
 
-    // 處理 課程單價(未稅)              
-//    sessionResult[i][23] = (parseFloat(sessionResult[i][14])/parseFloat(sessionResult[i][18]);                
-    sessionResult[i][23] = sessionResult[i][22]/1.05;                
+    // 處理 課程單價(未稅)                           
+//    sessionResult[i][23] = sessionResult[i][22]/1.05;                
+    sessionResult[i][22] = sessionResult[i][21]/1.05;                
 
     // 合約退費堂數, 退費金額/課程單價(含稅)
-    sessionResult[i][20] = sessionResult[i][20]/sessionResult[i][22];               
+//    sessionResult[i][20] = sessionResult[i][20]/sessionResult[i][22];               
 
 
     // 處理 合約已認列金額(含稅) = 已執行堂數 * 課程單價(含稅) + 入會費(含稅)
-    //sessionResult[i][24] = (sessionResult[i][19] * parseFloat(sessionResult[i][13])) / parseFloat(sessionResult[i][18]);
-    sessionResult[i][24] = sessionResult[i][19]*sessionResult[i][22] + parseFloat(sessionResult[i][33]);
+//    sessionResult[i][24] = sessionResult[i][19]*sessionResult[i][22] + parseFloat(sessionResult[i][33]);
+    sessionResult[i][23] = sessionResult[i][19]*sessionResult[i][21] + parseFloat(sessionResult[i][32]);
 
     // 處理 合約已認列金額(未稅)
-    sessionResult[i][25] = sessionResult[i][24] / 1.05;
+//    sessionResult[i][25] = sessionResult[i][24] / 1.05;
+    sessionResult[i][24] = sessionResult[i][23] / 1.05;
 
     // 處理 合約未認列金額(含稅)
-    sessionResult[i][26] = sessionResult[i][13] - sessionResult[i][24];
+//    sessionResult[i][26] = sessionResult[i][13] - sessionResult[i][24];
+    sessionResult[i][25] = sessionResult[i][13] - sessionResult[i][23];
 
     // 處理 合約未認列金額(未稅)
-    sessionResult[i][27] = sessionResult[i][14] - sessionResult[i][25];                
+//    sessionResult[i][27] = sessionResult[i][14] - sessionResult[i][25];                
+    sessionResult[i][26] = sessionResult[i][14] - sessionResult[i][24];                
     if ( sessionResult[i][2] != storeId) {
       console.log("store change");
       storeId = sessionResult[i][2];
@@ -394,17 +399,20 @@ async function processContractSessionHistory() {
       sessionIndexForDay = 1;
       sessionResult[i][17] = sessionIndexForDay++; 
       // 當日認列金額(含稅)
-      sessionResult[i][28] = sessionResult[i][22];
+//      sessionResult[i][28] = sessionResult[i][22];
+      sessionResult[i][27] = sessionResult[i][21];
 
 
     } else {
       // 堂數排序 not implement yet
       sessionResult[i][17] = sessionIndexForDay++; 
-      sessionResult[i][28] = sessionResult[i][22]+sessionResult[i-1][28];
+//      sessionResult[i][28] = sessionResult[i][22]+sessionResult[i-1][28];
+      sessionResult[i][27] = sessionResult[i][21]+sessionResult[i-1][27];
     }
 
     // 當日認列金額(未稅)
-    sessionResult[i][29] = sessionResult[i][28]/1.05;  
+//    sessionResult[i][29] = sessionResult[i][28]/1.05;  
+    sessionResult[i][28] = sessionResult[i][27]/1.05;  
 
   }
 
@@ -438,7 +446,7 @@ function sessionCheck(){
       console.log(sessionResultRaw);
       sessionResult=[];
       for (var i=0; i< sessionResultRaw.length; i++){
-        if (sessionResultRaw[i][30]==true) { // RSV.[Check]
+        if (sessionResultRaw[i][29]==true) { // RSV.[Check]
           sessionResult.push(sessionResultRaw[i]);
         }
       }
