@@ -353,19 +353,15 @@ async function processContractSessionHistory() {
     sessionResult[i][16] = parseFloat(sessionResult[i][19])/usedMonth;
 
     // 處理 合約剩餘堂數                
-//    sessionResult[i][21] = sessionResult[i][18] - sessionResult[i][19];
     sessionResult[i][20] = sessionResult[i][18] - sessionResult[i][19];
     
     // 處理 合約狀態, RIZAP 要反映課程時合約狀態
-//    sessionResult[i][15] = (sessionResult[i][21]==0)?"Completed":"On Work";
     sessionResult[i][15] = (sessionResult[i][20]==0)?"Completed":"On Work";
 
-    // 處理 課程單價(含稅) = (合約總價 - 入會費)/堂數
-//    sessionResult[i][22] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][33]))/parseFloat(sessionResult[i][18]);                 
+    // 處理 課程單價(含稅) = (合約總價 - 入會費)/堂數                 
     sessionResult[i][21] = (parseFloat(sessionResult[i][13])-parseFloat(sessionResult[i][32]))/parseFloat(sessionResult[i][18]);                 
 
-    // 處理 課程單價(未稅)                           
-//    sessionResult[i][23] = sessionResult[i][22]/1.05;                
+    // 處理 課程單價(未稅)                                       
     sessionResult[i][22] = sessionResult[i][21]/1.05;                
 
     // 合約退費堂數, 退費金額/課程單價(含稅)
@@ -795,9 +791,14 @@ async function contractCheck(){
         
       }
       
-      if (addTocontractResult) contractResult.push(contractResultRaw[i]);
+      if (contractResultRaw[i][64]<0) addTocontractResult = false;
+      
+      if (addTocontractResult && contractResultRaw[i][64]!=0) contractResult.push(contractResultRaw[i]);
     }
   }
+  
+  
+  // 2021-08-31 由於 Rizap 要求調整欄位， index mapping 變得很亂
   
   for (var i=0; i < contractResult.length; i++) {
     
@@ -807,125 +808,192 @@ async function contractCheck(){
     // 合約總價(未稅)
     contractResult[i][8]=contractResult[i][7]/1.05;
     
-    // 合約已執行堂數
+    // 合約已執行堂數 
     if (contractSessionHistory[contractResult[i][3]] == undefined) {
-      contractResult[i][11]="no data";
+      contractResult[i][11]="無上課資料";
+      
     } else {
-      contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;
+      contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;    
     }
     
-    // 合約退費堂數 - 尚未處理
-    contractResult[i][13] = "尚未處理";
+    // 課約剩餘堂數 contractResult[i][12]
+                      
+    // 合約退費堂數 - 已取消
+    //contractResult[i][13] = "尚未處理";
     
-    // 合約取消堂數 - 尚未處理
-    contractResult[i][14] = "尚未處理";
+    // 合約取消堂數 - 已取消
+    //contractResult[i][14] = "尚未處理";
     
     // 課程單價(含稅)
-    contractResult[i][15] = (contractResult[i][7]-contractResult[i][77])/contractResult[i][10]; //需扣掉入會費
+    contractResult[i][13] = (contractResult[i][7]-contractResult[i][77])/contractResult[i][10]; //需扣掉入會費
 
     // 課程單價(未稅)
-    contractResult[i][16] = contractResult[i][15]/1.05; 
-
-    if (contractSessionHistory[contractResult[i][3]] == undefined) {
-
-    } else {
-
-    }
+    contractResult[i][14] = contractResult[i][13]/1.05; 
     
     // 比對使用課程
     if (contractSessionHistory[contractResult[i][3]] == undefined) {
-      for (var j = 17; j<52; j++) contractResult[i][j]="no data";          
+      for (var j = 15; j<52; j++) contractResult[i][j]="無上課資料";          
     } else {
-      // 前年度合約剩餘堂數 = 合約堂數 - 前年度用掉的堂數      
-      contractResult[i][17]=contractResult[i][10] - contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
+      // 期初可用堂數 = 合約堂數 - 前年度用掉的堂數      
+      contractResult[i][15]=contractResult[i][10] - contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
       
-      // 3/31 之前已認列金額(含稅) = 前年度用掉的堂數 * 課程單價
-      contractResult[i][18]=contractResult[i][15] * contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
+      // 上期認列金額(含稅) = 前年度用掉的堂數 * 課程單價
+      contractResult[i][16]=contractResult[i][13] * contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
       
-      // 3/31 之前已認列金額(未稅) = 3/31 之前已認列金額(含稅)/1.05
-      contractResult[i][19]=contractResult[i][18]/1.05;      
+      // 上期認列金額(未稅) = 上期認列金額(含稅)/1.05
+      contractResult[i][17]=contractResult[i][16]/1.05;      
       
-      // 3/31 之前合約剩餘金額(含稅) = 合約總價(含稅) - 3/31 之前已認列金額(含稅)
-      contractResult[i][20] = contractResult[i][7] - contractResult[i][18];
+      // 上期未認列金額(含稅) = 合約總價(含稅) - 上期認列金額(含稅)
+      contractResult[i][18] = contractResult[i][7] - contractResult[i][16];
       
-      // 3/31 之前合約剩餘金額(未稅) = 3/31 之前合約剩餘金額(含稅)/1.05
-      contractResult[i][21] = contractResult[i][20]/1.05;   
+      // 上期未認列金額(未稅) = 3/31 之前合約剩餘金額(含稅)/1.05
+      contractResult[i][19] = contractResult[i][18]/1.05;   
       
       // 今年 4 月 ~ 明年 3 月使用堂數
-      for (var j = 22; j<34; j++) contractResult[i][j]=sessionsInContractByMonth[contractResult[i][3]][j-22];
+      for (var j = 20; j<32; j++) contractResult[i][j]=sessionsInContractByMonth[contractResult[i][3]][j-20];
       
-      // 前年度未認列(含稅) - 尚未處理
-      contractResult[i][34] = "尚未處理";      
+      // 前年度未認列(含稅) - 已取消
+      //contractResult[i][34] = "尚未處理";      
       
-      // 前年度未認列(未稅) - 尚未處理
-      contractResult[i][35] = "尚未處理";        
+      // 前年度未認列(未稅) - 已取消
+      //contractResult[i][35] = "尚未處理";        
       
       // 今年 4 月 ~ 明年 3 月已認列(含稅) = 課程單價(含稅) * 已使用堂數
-      for (var j = 36; j<48; j++) contractResult[i][j]= contractResult[i][15] * contractResult[i][j-14];     
+      for (var j = 32; j<44; j++) contractResult[i][j]= contractResult[i][13] * contractResult[i][j-12];     
       
       // 合約已認列金額(含稅) = 合約單價(含稅) * 已執行堂數
-      contractResult[i][48]= contractResult[i][15] * contractResult[i][11]; 
+      contractResult[i][44]= contractResult[i][13] * contractResult[i][11]; 
       
       // 合約已認列金額(未稅) = 合約已認列金額(含稅)/1.05;
-      contractResult[i][49]= contractResult[i][48]/1.05;       
+      contractResult[i][45]= contractResult[i][44]/1.05;       
       
       // 合約未認列金額(含稅) = 合約總價(含稅) - 合約已認列金額(含稅)
-      contractResult[i][50]= contractResult[i][7] - contractResult[i][48]; 
+      contractResult[i][46]= contractResult[i][7] - contractResult[i][44]; 
       
       // 合約未認列金額(未稅) = 合約未認列金額(含稅)/1.05;
-      contractResult[i][51]= contractResult[i][50]/1.05;         
+      contractResult[i][47]= contractResult[i][46]/1.05;         
       
     }    
        
-    for (var j =56; j<62; j++) contractResult[i][j] = "尚未處理";
+    for (var j =48; j<62; j++) contractResult[i][j] = "尚未處理";
     
     // 顧客已付金額(含稅) 累進
-    contractResult[i][52] = contractResult[i][64];
+    contractResult[i][48] = contractResult[i][64];
     if (i>0 && contractResult[i][3] == contractResult[i-1][3]){
-      contractResult[i][52] = contractResult[i][64] + contractResult[i-1][52];;
+      contractResult[i][48] = contractResult[i][64] + contractResult[i-1][48];;
       
     }
     
     // 顧客已付金額(未稅) = 顧客已付金額(含稅)/1.05
-    contractResult[i][53] = contractResult[i][52]/1.05;
+    contractResult[i][49] = contractResult[i][48]/1.05;
     
     // 顧客尚未付金額(含稅) = 合約總價(含稅) - 顧客已付金額(含稅)
-    contractResult[i][54] = contractResult[i][7] - contractResult[i][52];
+    contractResult[i][50] = contractResult[i][7] - contractResult[i][48];
     
     // 顧客尚未付金額(未稅) = 顧客尚未付金額(含稅)/1.05
-    contractResult[i][55] = contractResult[i][54]/1.05;    
-
-    // 付款日 和 發票日期
-    contractResult[i][62] = contractResult[i][62].substr(0,10);
-    contractResult[i][67] = contractResult[i][67].substr(0,10);
-    contractResult[i][69] = contractResult[i][69].substr(0,10);
-    contractResult[i][74] = contractResult[i][74].substr(0,10);
+    contractResult[i][51] = contractResult[i][50]/1.05;    
     
-    // 付款方式
-    if (contractResult[i][63]!=null ) {
-      if (contractResult[i][63].includes("PriceByCreditCard")) contractResult[i][63] = $("#ml-信用卡").text();
-      if (contractResult[i][63].includes("Cash")) contractResult[i][63] = $("#ml-現金").text();
-      if (contractResult[i][63].includes("NoCardInstallment")) contractResult[i][63] = $("#ml-無卡分期").text();
-    }     
-    if (contractResult[i][70]!=null) {
-      if (contractResult[i][70].includes("PriceByCreditCard")) contractResult[i][70] = $("#ml-信用卡").text();
-      if (contractResult[i][70].includes("Cash")) contractResult[i][70] = $("#ml-現金").text();
-      if (contractResult[i][70].includes("NoCardInstallment")) contractResult[i][70] = $("#ml-無卡分期").text();
-    }      
+//    if (contractResult[i][78] == 'Withdraw'){ // Withdraw 是預設(但沒有 withdraw)，真正 Withdraw 是 Withdraw-Rebate 或 Full Payback，
+    if (!contractResult[i][9].includes('Withdrew')){ // Withdraw 是預設(但沒有 withdraw)，真正 Withdraw 是 Withdraw-Rebate 或 Full Payback，
+      // 53 取消金額(含稅) = 合約金額 - 已付金額
+      contractResult[i][53] = "";
+      
+      // 54 取消金額(未稅) = 取消金額(含稅)/1.05
+      contractResult[i][54] = "";
+      
+      // 52 取消堂數 = 取消金額(含稅) / 課程單價(含稅)
+      contractResult[i][52] = "";
+      
+      // 55 折讓金額(含稅) 
+      contractResult[i][55] = "";
+      
+      // 56 折讓金額(未稅) 
+      contractResult[i][56] = "";            
 
-    // 付款金額(未稅) = 付款金額(含稅)/1.05
-    contractResult[i][65] = contractResult[i][64]/1.05;
-    contractResult[i][72] = contractResult[i][71]/1.05;
-    
-    // 發票種類
-    if (contractResult[i][66]!=null) {
-      if (contractResult[i][66].includes("Duplicate")) contractResult[i][66] = "二聯式發票";
-      if (contractResult[i][66].includes("Triplicate")) contractResult[i][66] = "三聯式發票";
+      // 57 折讓堂數 
+      contractResult[i][57] = "";
+            
+      // 58 手續費 
+      contractResult[i][58] = "";
+            
+      // 59 折讓稅額       
+      contractResult[i][59] = "";
+            
+    } else {
+      // 53 取消金額(含稅) = 合約金額 - 已付金額
+      contractResult[i][53] = contractResult[i][7] - contractResult[i][48];
+      
+      // 54 取消金額(未稅) = 取消金額(含稅)/1.05
+      contractResult[i][54] = contractResult[i][53]/1.05
+      
+      // 52 取消堂數 = 取消金額(含稅) / 課程單價(含稅)
+      contractResult[i][52] = contractResult[i][53]/contractResult[i][13];
+      
+      // 55 折讓堂數 = 合約剩餘堂數
+      contractResult[i][55] = contractResult[i][12];
+      
+      // 56 折讓金額(含稅) = 合約剩餘堂數 * 課程單價(含稅)
+      contractResult[i][56] = contractResult[i][12]*contractResult[i][13];
+        
+      // 57 折讓金額(未稅)
+      contractResult[i][57] = contractResult[i][56]/1.05;
+      
+
+      
+      // 58 手續費 
+      contractResult[i][58] = contractResult[i][79];
+      
+      // 59 折讓稅額 = (折讓金額(含稅) - 手續費(含稅)/1.05 * 5% = (折讓金額(未稅) - 手續費(未稅))*0.05
+      contractResult[i][59] = (contractResult[i][56] - contractResult[i][58])/1.05*0.05;
     }
-    if (contractResult[i][73]!=null) {
-      if (contractResult[i][73].includes("Duplicate")) contractResult[i][73] = "二聯式發票";
-      if (contractResult[i][73].includes("Triplicate")) contractResult[i][73] = "三聯式發票";
-    }    
+    
+    
+    
+    // 付款日1 和 發票日期1
+    contractResult[i][60] = contractResult[i][62].substr(0,10);
+    contractResult[i][65] = contractResult[i][67].substr(0,10);
+
+    
+    // 付款方式1
+    if (contractResult[i][63]!=null ) {
+      if (contractResult[i][63].includes("PriceByCreditCard")) contractResult[i][61] = $("#ml-信用卡").text();
+      if (contractResult[i][63].includes("Cash")) contractResult[i][61] = $("#ml-現金").text();
+      if (contractResult[i][63].includes("NoCardInstallment")) contractResult[i][61] = $("#ml-無卡分期").text();
+    }          
+
+    // 付款金額1(含稅) 
+    contractResult[i][62] = contractResult[i][64];
+
+    // 付款金額1(未稅) = 付款金額(含稅)/1.05
+    contractResult[i][63] = contractResult[i][62]/1.05;
+    
+    // 發票種類1
+     contractResult[i][64] = "";
+    if (contractResult[i][66]!=null) {
+     
+      if (contractResult[i][66].includes("Duplicate")) contractResult[i][64] = "二聯式發票";
+      if (contractResult[i][66].includes("Triplicate")) contractResult[i][64] = "三聯式發票";
+    }
+//    if (contractResult[i][73]!=null) {
+//      contractResult[i][71] = contractResult[i][73];
+//      if (contractResult[i][73].includes("Duplicate")) contractResult[i][71] = "二聯式發票";
+//      if (contractResult[i][73].includes("Triplicate")) contractResult[i][71] = "三聯式發票";
+//    }    
+    
+    // 發票號碼1
+    contractResult[i][66] = contractResult[i][68];
+
+    
+    // Copy 1 to 2 付款日 和 發票日期
+    contractResult[i][67] = contractResult[i][60]
+    contractResult[i][68] = contractResult[i][61]
+    contractResult[i][69] = contractResult[i][62]
+    contractResult[i][70] = contractResult[i][63]
+    contractResult[i][71] = contractResult[i][64]
+    contractResult[i][72] = contractResult[i][65]
+    contractResult[i][73] = contractResult[i][66];    
+
+    
     
   }
   
