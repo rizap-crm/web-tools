@@ -48,10 +48,12 @@
   </div>
 
   <div style='margin: 10px'>
-    <span style='margin-left:0px' id ='ml-開始日期'>開始日期</span>
-    <input id='contractQueryStartDate' type='date' />
+    <span style='margin-left:0px' id ='ml-查詢年度'>查詢年度</span>
+    <input id='contractQueryStartDate' style="width:50px"/>
+<!--
     <span style='margin-left:30px' id ='ml-結束日期'>結束日期</span>
     <input id='contractQueryEndDate' type='date'/>
+-->
         
     <button style='margin-left:30px' class='btn-gradient-primary font-weight-bold' onclick='contractCheck()' >
       <span id='ml-檢查'>檢 查</span>
@@ -176,7 +178,7 @@
       }
     }
 
-    $('#contractQueryStartDate').val(today.toISOString().substr(0,10));
+    $('#contractQueryStartDate').val(today.toISOString().substr(0,4));
     $('#contractQueryEndDate').val(today.toISOString().substr(0,10));  
     
     var contractDataTable =$('#contractDataTable').DataTable( {
