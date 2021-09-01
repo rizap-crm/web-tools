@@ -773,7 +773,7 @@ async function contractCheck(){
     )
     {
       if (contractResultRaw[i][9].includes("Completed") ||contractResultRaw[i][9].includes("Withdrew")) {
-        
+           
         var sessionsTmp = sessionsInSales[contractResultRaw[i][3]];
         if (sessionsInSales[contractResultRaw[i][3]]==undefined) { // Withdrew and no sales records
           //console.log("No sales in ", contractResultRaw[i][3]);
@@ -816,7 +816,11 @@ async function contractCheck(){
       contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;    
     }
     
-    // 課約剩餘堂數 contractResult[i][12]
+    // 合約剩餘堂數 contractResult[i][12]
+    合約剩餘堂數 = contractResult[i][12];
+    // RIZAP 認為取消或完成，合約剩餘堂數應為 0
+    if (contractResult[i][9].includes("Completed") ||contractResult[i][9].includes("Withdrew")) 
+      contractResult[i][12] = 0; 
                       
     // 合約退費堂數 - 已取消
     //contractResult[i][13] = "尚未處理";
@@ -930,10 +934,10 @@ async function contractCheck(){
       contractResult[i][52] = contractResult[i][53]/contractResult[i][13];
       
       // 55 折讓堂數 = 合約剩餘堂數
-      contractResult[i][55] = contractResult[i][12];
+      contractResult[i][55] = 合約剩餘堂數;
       
       // 56 折讓金額(含稅) = 合約剩餘堂數 * 課程單價(含稅)
-      contractResult[i][56] = contractResult[i][12]*contractResult[i][13];
+      contractResult[i][56] = 合約剩餘堂數*contractResult[i][13];
         
       // 57 折讓金額(未稅)
       contractResult[i][57] = contractResult[i][56]/1.05;
