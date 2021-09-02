@@ -322,11 +322,11 @@ async function processContractSessionHistory() {
       sessionResult[i][11] = sessionResult[i][11].substr(0,10);       
 
       // 合約延伸到期日期，Database ContractForms 裡的 ExpirationDate 
-      sessionResult[i][31] = sessionResult[i][31].substr(0,10);   
+      sessionResult[i][30] = sessionResult[i][30].substr(0,10);   
 
       // 如果有延伸，結合兩個日期
-      if (sessionResult[i][31] > "0001-01-01") {
-        sessionResult[i][11] = sessionResult[i][11] + "<br>Ext. " + sessionResult[i][31];
+      if (sessionResult[i][30] > "0001-01-01") {
+        sessionResult[i][11] = sessionResult[i][11] + "<br>Ext. " + sessionResult[i][30];
       }
 
 
@@ -364,7 +364,7 @@ async function processContractSessionHistory() {
     // 處理 課程單價(未稅)                                       
     sessionResult[i][22] = sessionResult[i][21]/1.05;                
 
-    // 合約退費堂數, 退費金額/課程單價(含稅)
+    // 合約退費堂數, 退費金額/課程單價(含稅) 已取消
 //    sessionResult[i][20] = sessionResult[i][20]/sessionResult[i][22];               
 
 
