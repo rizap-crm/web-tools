@@ -690,7 +690,6 @@ async function contractCheck(){
         alert("Database READ ERROR!!!");
       }
     }); 
-
   }
 
   var contractNos = Object.keys(contractSessionHistory);
