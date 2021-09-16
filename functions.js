@@ -815,10 +815,16 @@ async function contractCheck(){
     } else {
       contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;    
     }
+    // 2021-09-15 與 Benjamin 的線上討論，決定 已完成的合約，合約已執行堂數為合約堂數
+    if (contractResult[i][9].includes("Completed")) contractResult[i][11] = contractResult[i][10];
     
     // 合約剩餘堂數 contractResult[i][12]
-    合約剩餘堂數 = contractResult[i][12];
-    // RIZAP 認為取消或完成，合約剩餘堂數應為 0
+    // 資料庫裡的合約剩餘堂數是已扣除預約但尚未上課的堂數
+    // 2021-09-15 與 Benjamin 的線上討論，決定合約剩餘堂數為扣除已認列(就是已執行)的堂數
+    contractResult[i][12] = contractResult[i][10] - contractResult[i][11];
+    合約剩餘堂數 = contractResult[i][12];    
+    
+    // RIZAP 認為取消或完成，合約剩餘堂數應為 0   
     if (contractResult[i][9].includes("Completed") ||contractResult[i][9].includes("Withdrew")) 
       contractResult[i][12] = 0; 
                       
