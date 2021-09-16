@@ -798,7 +798,7 @@ async function contractCheck(){
   
   
   // 2021-08-31 由於 Rizap 要求調整欄位， index mapping 變得很亂
-  
+  var previousContract=""; // 2021-09-16 Rizap 要求多次付款的合約前面留白
   for (var i=0; i < contractResult.length; i++) {
     
     // 合約簽訂日期
@@ -809,7 +809,8 @@ async function contractCheck(){
     
     // 合約已執行堂數 
     if (contractSessionHistory[contractResult[i][3]] == undefined) {
-      contractResult[i][11]="無上課資料";
+      //contractResult[i][11]="無上課資料";
+      contractResult[i][11]=0; //2021-09-16
       
     } else {
       contractResult[i][11]=contractSessionHistory[contractResult[i][3]].length;    
@@ -841,7 +842,25 @@ async function contractCheck(){
     
     // 比對使用課程
     if (contractSessionHistory[contractResult[i][3]] == undefined) {
-      for (var j = 15; j<52; j++) contractResult[i][j]="無上課資料";          
+      for (var j = 20; j<48; j++) contractResult[i][j]= 0; //"無上課資料"; 
+      
+      // 期初可用堂數 = 合約堂數
+      contractResult[i][15] = 0; //contractResult[i][10];
+      
+      // 上期認列金額(含稅/未稅) = 0
+      contractResult[i][16] = 0;
+      contractResult[i][17] = 0;
+      
+      // 上期未認列金額(含稅/未稅) = 0 
+      contractResult[i][18] = 0;
+      contractResult[i][19] = 0;     
+      
+      // 合約未認列金額(含稅) = 合約總價(含稅) - 合約已認列金額(含稅)
+      contractResult[i][46]= contractResult[i][7] - contractResult[i][44]; 
+      
+      // 合約未認列金額(未稅) = 合約未認列金額(含稅)/1.05;
+      contractResult[i][47]= contractResult[i][46]/1.05;         
+      
     } else {
       // 期初可用堂數 = 合約堂數 - 前年度用掉的堂數      
       contractResult[i][15]=contractResult[i][10] - contractSessionHistory[contractResult[i][3]].less(queryYear+"-04");
@@ -888,7 +907,8 @@ async function contractCheck(){
     
     // 顧客已付金額(含稅) 累進
     contractResult[i][48] = contractResult[i][64];
-    if (i>0 && contractResult[i][3] == contractResult[i-1][3]){
+    //if (i>0 && contractResult[i][3] == contractResult[i-1][3]){
+    if (i>0 && contractResult[i][3] == previousContract){
       contractResult[i][48] = contractResult[i][64] + contractResult[i-1][48];;
       
     }
@@ -1001,8 +1021,19 @@ async function contractCheck(){
     contractResult[i][71] = contractResult[i][64]
     contractResult[i][72] = contractResult[i][65]
     contractResult[i][73] = contractResult[i][66];    
-
     
+    // 2021-09-16 Rizap 要求多次付款的合約前面留白
+    contractResult[i][67] = i; 
+    
+    var tmp_previousContract = contractResult[i][3];
+    if (contractResult[i][3] == previousContract){
+      //console.log(previousContract, contractResult[i][3])
+      for (var j=0; j< 48; j++ ) contractResult[i][j] ="   ";
+      for (var j=52; j< 60; j++ ) contractResult[i][j] ="   ";
+    } 
+    
+    previousContract = tmp_previousContract;
+    // End ---- 2021-09-16 Rizap 要求多次付款的合約前面留白
     
   }
   
