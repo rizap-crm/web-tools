@@ -909,8 +909,7 @@ async function contractCheck(){
     contractResult[i][48] = contractResult[i][64];
     //if (i>0 && contractResult[i][3] == contractResult[i-1][3]){
     if (i>0 && contractResult[i][3] == previousContract){
-      contractResult[i][48] = contractResult[i][64] + contractResult[i-1][48];;
-      
+      contractResult[i][48] = contractResult[i][64] + contractResult[i-1][48];     
     }
     
     // 顧客已付金額(未稅) = 顧客已付金額(含稅)/1.05
@@ -922,6 +921,14 @@ async function contractCheck(){
     // 顧客尚未付金額(未稅) = 顧客尚未付金額(含稅)/1.05
     contractResult[i][51] = contractResult[i][50]/1.05;    
     
+    // 2021-09-22 RIZAP 要求只留最後一列
+    if (i>0 && contractResult[i][3] == previousContract){
+      contractResult[i-1][48]="";
+      contractResult[i-1][49]="";
+      contractResult[i-1][50]="";
+      contractResult[i-1][51]="";   
+    }    
+ 
 //    if (contractResult[i][78] == 'Withdraw'){ // Withdraw 是預設(但沒有 withdraw)，真正 Withdraw 是 Withdraw-Rebate 或 Full Payback，
     if (!contractResult[i][9].includes('Withdrew')){ // Withdraw 是預設(但沒有 withdraw)，真正 Withdraw 是 Withdraw-Rebate 或 Full Payback，
       // 53 取消金額(含稅) = 合約金額 - 已付金額
