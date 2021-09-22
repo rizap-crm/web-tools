@@ -1028,7 +1028,7 @@ async function contractCheck(){
     var tmp_previousContract = contractResult[i][3];
     if (contractResult[i][3] == previousContract){
       //console.log(previousContract, contractResult[i][3])
-      for (var j=0; j< 48; j++ ) contractResult[i][j] ="   ";
+      for (var j=4; j< 48; j++ ) contractResult[i][j] ="   ";
       for (var j=52; j< 60; j++ ) contractResult[i][j] ="   ";
     } 
     
