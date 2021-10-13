@@ -540,7 +540,10 @@ function admissionFeeCheck(){
       console.log(admissionFeeResultRaw);
       admissionFeeResult=[];
       for (var i=0; i< admissionFeeResultRaw.length; i++){
+        //remove duplicate records, 2021-10-13 有點是鋸箭法
+        if ( i==0 || (i>1 && admissionFeeResultRaw[i][5]!=admissionFeeResultRaw[i-1][5])) {
           admissionFeeResult.push(admissionFeeResultRaw[i]);
+        }
       }
 
       processAdmissionFee();              
