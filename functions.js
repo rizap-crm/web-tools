@@ -49,7 +49,13 @@ async function loadPages(){
     console.log("contract-page loaded");
     contractPageLoaded = true;
     //if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));          
-  });   
+  });
+   
+  $("#attendance-page").load("./HtmlPages/attendancePage.html", function(){
+    console.log("attendance-page loaded");
+    attendancePageLoaded = true;
+    //if (localStorage.getItem("lang")!=null) setLang(localStorage.getItem("lang"));          
+  });  
 
 }
 
@@ -138,6 +144,22 @@ async function show_query_contracts_page(){
     query_contract_is_load = true;     
   }  
 }
+
+async function show_query_attendance_page(){
+  console.log("Show Attendance");
+  
+  $(".page-wrapper").hide();
+  $(".sidebar-item").css("color","white")
+
+  $("#attendance-page").show();   
+  
+  $("#ml-Sidebar-query-attendance").css("color", "#FBF279");
+  if (!query_attendance_is_load) {
+    attendanceCheck();
+    query_attendance_is_load = true;     
+  }  
+}
+
 
 function rsvCheck(){
   var startDateStr = $("#rsvQueryStartDate").val();
@@ -1051,4 +1073,80 @@ async function contractCheck(){
   contractDataTable.clear();
   contractDataTable.rows.add(contractResult).draw();  
   
+}
+
+// used in attendanceCheck() later
+function cnvtDatetime2ToString(dateTime2){
+
+  if (dateTime2.toString().substr(0,4) == '0001') return '';
+  
+  var tmp=  new Date(dateTime2);
+  return tmp.toTimeString().substr(0,8);
+  
+}
+function attendanceCheck(){
+  var startDateStr = $("#attendanceQueryStartDate").val();
+  var endDateStr = $("#attendanceQueryEndDate").val();
+
+  console.log(startDateStr, endDateStr);
+
+  var apiUrl = apiUrlBase + "?API=11" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
+
+  //console.log(apiUrl);
+
+  $.loading.start($("#ml-讀取資料").text());
+  $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {
+      //returnFromAPI = JSON.parse(JSON.stringify(returnData));
+      //console.log(returnFromAPI[0][3]);
+
+      attendanceResult = returnData;
+      console.log(typeof attendanceResult[0][1] )
+      for (i=0; i< attendanceResult.length; i++){
+        attendanceResult[i][1] = attendanceResult[i][1].substr(0,10);
+        
+        attendanceResult[i][1] = attendanceResult[i][1].substr(0,10);
+        
+        for (j=6; j < attendanceResult[i].length; j++) {
+          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j]);
+        }
+      }
+
+
+      attendanceDataTable.clear();
+      attendanceDataTable.rows.add(attendanceResult).draw();
+      $.loading.end();
+      $("#ml-Sidebar-check-attendance").css("color", "#FBF279");                
+      $("#sidebar-check-reservations-icon").css("color", "#FBF279");                
+    },
+
+    error: function() {
+      alert("Database READ ERROR!!!");
+    }
+  });             
+}
+
+
+// 麻煩的 Timze zone 轉換
+// browser 輸入當地日期 ==> UTC Z0 time string
+// aaa=new Date("2021-11-18:08:00")
+// aaa.toISOString() => '2021-11-18T00:00:00.000Z'
+
+// TC Z0 time string ==> 當地時間
+// bbb = new Date(aaa.toISOString()) ==>Thu Nov 18 2021 08:00:00 GMT+0800 (台北標準時間)
+// bbb.toTimeString() ==> '08:00:00 GMT+0800 (台北標準時間)'
+
+// convert date string to timestamp, Date.parse(DateString)
+
+
+
+function modifyAttendance(UUID){
+  console.log(UUID);
+  for (var i=0; i< attendanceResult.length; i++){
+    if (attendanceResult[i].includes(UUID)) console.log(attendanceResult[i]);
+  }
+  //alert("尚未實作");
 }

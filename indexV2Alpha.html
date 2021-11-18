@@ -5,7 +5,7 @@
     <script> 
       // Configuratiion
       var experimental=true;
-      var local_api = false;
+      var local_api = true;
       
       if (local_api) {
         var apiUrlBase = "http://localhost:5000/";
@@ -108,6 +108,11 @@
       </div>
       <!-- /Contract Page Wrapper -->	
       
+      <!-- Attendance Page Wrapper -->
+      <div class="page-wrapper" id="attendance-page">
+      </div>
+      <!-- /Contract Page Wrapper -->	      
+      
     </div>
     <!-- /Main Wrapper -->
 
@@ -178,6 +183,7 @@
       var query_admissionFee_is_load = false;
       var query_product_is_load = false;
       var query_contract_is_load = false;
+      var query_attendance_is_load = false;
 
       // variables for Tables
       var rsvResult=[];
@@ -186,6 +192,9 @@
       var admissionFeeResult=[];
       var productResult=[];
       var contractResult=[];
+      var attendanceResult=[];
+      //for test
+      attendanceResult=[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,6,17,18,19,20]];
       
       // variables for each page html load status
       var headingLoaded = false;
@@ -196,6 +205,7 @@
       var adminFeePageLoaded = false;
       var productPageLoaded = false;
       var contractPageLoaded = false;
+      var attendancePageLoaded = false;
       
       var sessionsInContractByMonth = {};
       
