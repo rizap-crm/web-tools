@@ -1099,28 +1099,28 @@ function attendanceCheck(){
     url: apiUrl,
     type: "GET",
     dataType: "json",
-    success: function(returnData) {
+    success: function(returnData) {    
       //returnFromAPI = JSON.parse(JSON.stringify(returnData));
-      //console.log(returnFromAPI[0][3]);
-
+      //console.log(returnFromAPI[0][3]);      
       attendanceResult = returnData;
-      console.log(typeof attendanceResult[0][1] )
-      for (i=0; i< attendanceResult.length; i++){
-        attendanceResult[i][1] = attendanceResult[i][1].substr(0,10);
+
+      for (i=0; i< attendanceResult.length; i++){      
+        attendanceResult[i][0] = i;
         
-        attendanceResult[i][1] = attendanceResult[i][1].substr(0,10);
+        var tmp=  new Date(attendanceResult[i][1]);
+        attendanceResult[i][1] = tmp.toLocaleDateString();
         
-        for (j=6; j < attendanceResult[i].length; j++) {
+        for (j=6; j < attendanceResult[i].length-1; j++) {
           attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j]);
         }
       }
-
-
+    
       attendanceDataTable.clear();
       attendanceDataTable.rows.add(attendanceResult).draw();
       $.loading.end();
       $("#ml-Sidebar-check-attendance").css("color", "#FBF279");                
-      $("#sidebar-check-reservations-icon").css("color", "#FBF279");                
+      $("#sidebar-check-reservations-icon").css("color", "#FBF279");    
+      
     },
 
     error: function() {
@@ -1142,14 +1142,24 @@ function attendanceCheck(){
 // convert date string to timestamp, Date.parse(DateString)
 
 
-function modifyAttendance(UUID){
-  for (var i=0; i< attendanceResult.length; i++){
-    if (attendanceResult[i].includes(UUID)) {
-      $("#modifyFormName").text(attendanceResult[i][2]);
-      $("#modifyFormDate").text(attendanceResult[i][1]);
-
-    }
-  }
+function modifyAttendance(data){
+  var i=data;
+  console.log(i);
+  $("#modifyFormName").text(attendanceResult[i][2]);
+  $("#modifyFormDate").text(attendanceResult[i][1]);
+  $("#checkIn1").val(attendanceResult[i][6]);
+  $("#checkOut1").val(attendanceResult[i][7]);
+  $("#restStart1").val(attendanceResult[i][8]);
+  $("#restEnd1").val(attendanceResult[i][9]);
+  $("#restStart2").val(attendanceResult[i][10]);
+  $("#restEnd2").val(attendanceResult[i][11]);
+  $("#restStart3").val(attendanceResult[i][12]);
+  $("#restEnd3").val(attendanceResult[i][13]);
+  $("#restStart4").val(attendanceResult[i][14]);
+  $("#restEnd4").val(attendanceResult[i][15]);
+  $("#restStart5").val(attendanceResult[i][16]);
+  $("#restEnd5").val(attendanceResult[i][17]);  
+  
   $("#attendanceModifyForm").show();
 }
 
