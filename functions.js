@@ -1142,11 +1142,31 @@ function attendanceCheck(){
 // convert date string to timestamp, Date.parse(DateString)
 
 
-
 function modifyAttendance(UUID){
-  console.log(UUID);
   for (var i=0; i< attendanceResult.length; i++){
-    if (attendanceResult[i].includes(UUID)) console.log(attendanceResult[i]);
+    if (attendanceResult[i].includes(UUID)) {
+      $("#modifyFormName").text(attendanceResult[i][2]);
+      $("#modifyFormDate").text(attendanceResult[i][1]);
+
+    }
   }
-  //alert("尚未實作");
+  $("#attendanceModifyForm").show();
+}
+
+function attendanceModifyUpdate(){
+  var pwd = prompt("請輸入密碼");
+  console.log(pwd);
+  
+  if (pwd == null) return;
+  
+  // call API to write to database
+  var success=false;
+  if (success) {
+    $("#attendanceModifyForm").hide();
+    alert("寫入資料庫成功!");
+  }
+  else {
+    alert("寫入資料庫失敗!")
+  }
+  
 }
