@@ -1076,12 +1076,16 @@ async function contractCheck(){
 }
 
 // used in attendanceCheck() later
-function cnvtDatetime2ToString(dateTime2){
+function cnvtDatetime2ToString(dateTime2, method){
 
   if (dateTime2.toString().substr(0,4) == '0001') return '';
   
-  var tmp=  new Date(dateTime2);
-  return tmp.toTimeString().substr(0,8);
+  if (method != "Fingerprint") {
+    return dateTime2.toString().substr(11,8);
+  } else {
+    var tmp=  new Date(dateTime2);
+    return tmp.toTimeString().substr(0,8);
+  }
   
 }
 function attendanceCheck(){
@@ -1110,8 +1114,8 @@ function attendanceCheck(){
         var tmp=  new Date(attendanceResult[i][1]);
         attendanceResult[i][1] = tmp.toLocaleDateString();
         
-        for (j=6; j < attendanceResult[i].length-1; j++) {
-          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j]);
+        for (j=6; j < 18; j++) {
+          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][19]);
         }
       }
     
