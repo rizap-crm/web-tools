@@ -1151,6 +1151,9 @@ function modifyAttendance(data){
   console.log(i);
   $("#modifyFormName").text(attendanceResult[i][2]);
   $("#modifyFormDate").text(attendanceResult[i][1]);
+  $("#總出勤時間").val(attendanceResult[i][3]);
+  $("#總休息時間").val(attendanceResult[i][4]);
+  $("#總請假時間").val(attendanceResult[i][5]);
   $("#checkIn1").val(attendanceResult[i][6]);
   $("#checkOut1").val(attendanceResult[i][7]);
   $("#restStart1").val(attendanceResult[i][8]);

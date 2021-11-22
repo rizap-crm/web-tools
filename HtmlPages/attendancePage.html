@@ -117,20 +117,23 @@
         </div>
               
         <div class='modal-body' id='attendance_modal'>
-          <label id="ml-員工姓名">員工姓名</label><span id="modifyFormName" style="margin-left:50px"></span><br>
-          <label id="ml-出勤日期">出勤日期</label><span id="modifyFormDate" style="margin-left:50px"></span><br>
-          <label id="ml-出勤一">出勤一</label><input id="checkIn1"  style="margin-left:65px"><br>     
-          <label id="ml-退勤一">退勤一</label><input id="checkOut1" style="margin-left:65px"><br>  
-          <label id="ml-休息一_開始">休息一(開始)</label><input id="restStart1" style="margin-left:24px"><br>   
-          <label id="ml-休息一_結束">休息一(結束)</label><input id="restEnd1"   style="margin-left:24px"><br>  
-          <label id="ml-休息二_開始">休息二(開始)</label><input id="restStart2" style="margin-left:24px"><br>   
-          <label id="ml-休息二_結束">休息二(結束)</label><input id="restEnd2"   style="margin-left:24px"><br> 
-          <label id="ml-休息三_開始">休息三(開始)</label><input id="restStart3" style="margin-left:24px"><br>   
-          <label id="ml-休息三_結束">休息三(結束)</label><input id="restEnd3"   style="margin-left:24px"><br> 
-          <label id="ml-休息四_開始">休息四(開始)</label><input id="restStart4" style="margin-left:24px"><br>   
-          <label id="ml-休息四_結束">休息四(結束)</label><input id="restEnd4"   style="margin-left:24px"><br> 
-          <label id="ml-休息五_開始">休息五(開始)</label><input id="restStart5" style="margin-left:24px"><br>   
-          <label id="ml-休息五_結束">休息五(結束)</label><input id="restEnd5"   style="margin-left:24px"><br>                                                              
+          <label id="ml-員工姓名">員工姓名</label><span id="modifyFormName" style="margin-left:50px; width:200px"></span><br>
+          <label id="ml-出勤日期">出勤日期</label><span id="modifyFormDate" style="margin-left:50px; width:200px"></span><br>
+          <label id="ml-總出勤時間">總出勤時間</label><input id="總出勤時間" style="margin-left:35px; width:200px"><br>
+          <label id="ml-總休息時間">總休息時間</label><input id="總休息時間" style="margin-left:35px; width:200px"><br>
+          <label id="ml-總請假時間">總請假時間</label><input id="總請假時間" style="margin-left:35px; width:200px"><br>
+          <label id="ml-出勤一">出勤一</label><input type="time" id="checkIn1"  style="margin-left:65px; width:200px"><br>     
+          <label id="ml-退勤一">退勤一</label><input type="time" id="checkOut1" style="margin-left:65px; width:200px"><br>  
+          <label id="ml-休息一_開始">休息一(開始)</label><input type="time" id="restStart1" style="margin-left:24px; width:200px"><br>   
+          <label id="ml-休息一_結束">休息一(結束)</label><input type="time" id="restEnd1"   style="margin-left:24px; width:200px"><br>  
+          <label id="ml-休息二_開始">休息二(開始)</label><input type="time" id="restStart2" style="margin-left:24px; width:200px"><br>   
+          <label id="ml-休息二_結束">休息二(結束)</label><input type="time" id="restEnd2"   style="margin-left:24px; width:200px"><br> 
+          <label id="ml-休息三_開始">休息三(開始)</label><input type="time" id="restStart3" style="margin-left:24px; width:200px"><br>   
+          <label id="ml-休息三_結束">休息三(結束)</label><input type="time" id="restEnd3"   style="margin-left:24px; width:200px"><br> 
+          <label id="ml-休息四_開始">休息四(開始)</label><input type="time" id="restStart4" style="margin-left:24px; width:200px"><br>   
+          <label id="ml-休息四_結束">休息四(結束)</label><input type="time" id="restEnd4"   style="margin-left:24px; width:200px"><br> 
+          <label id="ml-休息五_開始">休息五(開始)</label><input type="time" id="restStart5" style="margin-left:24px; width:200px"><br>   
+          <label id="ml-休息五_結束">休息五(結束)</label><input type="time" id="restEnd5"   style="margin-left:24px; width:200px"><br>                                                              
         </div>
               
         <div class='modal-footer'>
@@ -185,7 +188,7 @@
         { 'extend': 'csv', 'text':'<span id="ml-匯出CSV">匯出 CSV</span>','className': 'btn-gradient-primary font-weight-bold' },
         { 'extend': 'excel', 'text':'<span id="ml-匯出EXCEL">匯出 EXCEL</span>','className': 'btn-gradient-primary font-weight-bold' }
       ], 
-      order: [[ 1, 'asc' ]], //請自行修改
+      order: [[ 1, 'asc' ], [ 6, 'asc' ]], //請自行修改
       data: attendanceResult,  
       columnDefs: [
         { targets: [0,],
