@@ -1078,7 +1078,7 @@ async function contractCheck(){
 // used in attendanceCheck() later
 function cnvtDatetime2ToString(dateTime2, method){
 
-  if (dateTime2.toString().substr(0,4) == '0001') return '';
+  if (dateTime2.toString().substr(-13,13) == '00:00:00.000Z') return '';
   
   if (method != "Fingerprint") {
     return dateTime2.toString().substr(11,8);
@@ -1114,8 +1114,12 @@ function attendanceCheck(){
         var tmp=  new Date(attendanceResult[i][1]);
         attendanceResult[i][1] = tmp.toLocaleDateString();
         
-        for (j=6; j < 18; j++) {
-          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][19]);
+        // For RIZAP Taiwan Fiona
+        attendanceResult[i][3] = (attendanceResult[i][3]=="Fingerprint")?"指紋打卡":"手動打卡";
+             
+        for (j=7; j < 19; j++) {
+          console.log(j, attendanceResult[i][j]);
+          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][20]);
         }
       }
     
