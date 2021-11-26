@@ -1076,25 +1076,45 @@ async function contractCheck(){
 }
 
 // used in attendanceCheck() later
-function cnvtDatetime2ToString(dateTime2, method){
-
-  if (dateTime2.toString().substr(-13,13) == '00:00:00.000Z') return '';
+function cnvtDatetime2ToString(dateTime2, method, type){
+  if( type=="date"){
+    if ( (method == "Fingerprint") || (method == "Modify")  ) {
+      var tmp=  new Date(dateTime2);
+      return tmp.toLocaleDateString();    
+    } else {
+      return dateTime2.toString().substr(0,10);
+    }    
+  }
   
-  if (method != "Fingerprint") {
-    return dateTime2.toString().substr(11,8);
-  } else {
-    var tmp=  new Date(dateTime2);
-    return tmp.toTimeString().substr(0,8);
+  if (type=="time"){
+    if (dateTime2.toString().substr(-13,13) == '00:00:00.000Z') return '';
+    //if (dateTime2.toString().substr(0,10) == '0001-01-01') return '';
+
+    if ( (method == "Fingerprint") || (method == "Modify")  ) {
+      var tmp=  new Date(dateTime2);
+      return tmp.toTimeString().substr(0,8);    
+    } else {
+      return dateTime2.toString().substr(11,8);
+    }
   }
   
 }
 function attendanceCheck(){
   var startDateStr = $("#attendanceQueryStartDate").val();
   var endDateStr = $("#attendanceQueryEndDate").val();
+  
+  // 配合 GMT0 的時差問題，將查詢時間提前一天
+  var minusOneDay = new Date();
+  var tmpDate = new Date(startDateStr);
+  minusOneDay.setDate(tmpDate.getDate() -1);
+  var minusOneDayStr = minusOneDay.toISOString().substr(0,10);
 
-  console.log(startDateStr, endDateStr);
+  console.log(minusOneDayStr, endDateStr);
+  // ///////////////////////////////////
 
-  var apiUrl = apiUrlBase + "?API=11" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
+  var apiUrl = apiUrlBase + "?API=11" + "&StartDate=" + minusOneDayStr +"&EndDate=" + endDateStr;
+  
+  //var apiUrl = apiUrlBase + "?API=11" + "&StartDate=" + startDateStr +"&EndDate=" + endDateStr;
 
   //console.log(apiUrl);
 
@@ -1111,15 +1131,13 @@ function attendanceCheck(){
       for (i=0; i< attendanceResult.length; i++){      
         attendanceResult[i][0] = i;
         
-        var tmp=  new Date(attendanceResult[i][1]);
-        attendanceResult[i][1] = tmp.toLocaleDateString();
+        attendanceResult[i][1] = cnvtDatetime2ToString(attendanceResult[i][1], attendanceResult[i][3], "date");
         
         // For RIZAP Taiwan Fiona
-        attendanceResult[i][3] = (attendanceResult[i][3]=="Fingerprint")?"指紋打卡":"手動打卡";
+        attendanceResult[i][3] = attendanceResult[i][3];//(attendanceResult[i][3]=="Fingerprint")?"指紋打卡":"手動打卡";
              
         for (j=7; j < 19; j++) {
-          console.log(j, attendanceResult[i][j]);
-          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][20]);
+          attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][3], "time");
         }
       }
     
@@ -1137,57 +1155,131 @@ function attendanceCheck(){
   });             
 }
 
-
-// 麻煩的 Timze zone 轉換
-// browser 輸入當地日期 ==> UTC Z0 time string
-// aaa=new Date("2021-11-18:08:00")
-// aaa.toISOString() => '2021-11-18T00:00:00.000Z'
-
-// TC Z0 time string ==> 當地時間
-// bbb = new Date(aaa.toISOString()) ==>Thu Nov 18 2021 08:00:00 GMT+0800 (台北標準時間)
-// bbb.toTimeString() ==> '08:00:00 GMT+0800 (台北標準時間)'
-
-// convert date string to timestamp, Date.parse(DateString)
-
-
+var oldRec;
 function modifyAttendance(data){
+  oldRec = "PreviousData - ";
+  for (var j=1; j<20;j++) {
+    oldRec += " field"+j.toString()+":"+ attendanceResult[data][j];
+  }
+
   var i=data;
   console.log(i);
   $("#modifyFormName").text(attendanceResult[i][2]);
   $("#modifyFormDate").text(attendanceResult[i][1]);
-  $("#總出勤時間").val(attendanceResult[i][3]);
-  $("#總休息時間").val(attendanceResult[i][4]);
-  $("#總請假時間").val(attendanceResult[i][5]);
-  $("#checkIn1").val(attendanceResult[i][6]);
-  $("#checkOut1").val(attendanceResult[i][7]);
-  $("#restStart1").val(attendanceResult[i][8]);
-  $("#restEnd1").val(attendanceResult[i][9]);
-  $("#restStart2").val(attendanceResult[i][10]);
-  $("#restEnd2").val(attendanceResult[i][11]);
-  $("#restStart3").val(attendanceResult[i][12]);
-  $("#restEnd3").val(attendanceResult[i][13]);
-  $("#restStart4").val(attendanceResult[i][14]);
-  $("#restEnd4").val(attendanceResult[i][15]);
-  $("#restStart5").val(attendanceResult[i][16]);
-  $("#restEnd5").val(attendanceResult[i][17]);  
+  $("#記錄方式").text(attendanceResult[i][3]);
+  $("#記錄號碼").text(attendanceResult[i][19]);
+  $("#總出勤時間").val(attendanceResult[i][4]);
+  $("#總休息時間").val(attendanceResult[i][5]);
+  $("#總請假時間").val(attendanceResult[i][6]);
+  $("#checkIn1").val(attendanceResult[i][7]);
+  $("#checkOut1").val(attendanceResult[i][8]);
+  $("#restStart1").val(attendanceResult[i][9]);
+  $("#restEnd1").val(attendanceResult[i][10]);
+  $("#restStart2").val(attendanceResult[i][11]);
+  $("#restEnd2").val(attendanceResult[i][12]);
+  $("#restStart3").val(attendanceResult[i][13]);
+  $("#restEnd3").val(attendanceResult[i][14]);
+  $("#restStart4").val(attendanceResult[i][15]);
+  $("#restEnd4").val(attendanceResult[i][16]);
+  $("#restStart5").val(attendanceResult[i][17]);
+  $("#restEnd5").val(attendanceResult[i][18]);  
   
   $("#attendanceModifyForm").show();
 }
 
 function attendanceModifyUpdate(){
-  var pwd = prompt("請輸入密碼");
-  console.log(pwd);
   
-  if (pwd == null) return;
+  var newRec = "NewData - ";
+  newRec += " field1:"+ $("#modifyFormDate").text();
+  newRec += " field2:"+ $("#modifyFormName").text();
+  newRec += " field3:"+ $("#記錄方式").text();
+  newRec += " field4:"+ $("#總出勤時間").val();
+  newRec += " field5:"+ $("#總休息時間").val();
+  newRec += " field6:"+ $("#總請假時間").val();
+  newRec += " field7:"+ $("#checkIn1").val();
+  newRec += " field8:"+ $("#checkOut1").val();
   
-  // call API to write to database
-  var success=false;
-  if (success) {
-    $("#attendanceModifyForm").hide();
-    alert("寫入資料庫成功!");
+  var modifyString="";
+  modifyString += "&Total="+ parseFloat($("#總出勤時間").val());
+  modifyString += "&Rest="+ parseFloat($("#總休息時間").val());
+  modifyString += "&Leave="+ parseFloat($("#總請假時間").val());
+    
+  var checkInDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkIn1").val());
+  modifyString += "&CheckIn1=" + checkInDateTime.toISOString();     
+  
+  var checkOutDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkOut1").val());
+  modifyString += "&CheckOut1=" + checkOutDateTime.toISOString();      
+
+  
+  for (var i=1; i<6; i++){
+
+    var start = "#restStart" + i.toString();
+    var end   = "#restEnd"   + i.toString();
+    console.log(start, $(start).val());    
+    console.log(end, $(end).val());    
+    
+    if ($(start).val() !='') {      
+      var startDateTime = new Date($("#modifyFormDate").text()+" "+ $(start).val());
+      //console.log(startDateTime.toISOString());
+      modifyString += "&RestIn"+ i.toString()+"=" + startDateTime.toISOString();  
+      newRec += " field"+(i*2+7).toString()+":"+     startDateTime.toISOString();       
+    } else {
+      newRec += " field"+(i*2+7).toString()+":"+ "";
+    }
+    
+    if ($(end).val() !='')   {
+      var endDateTime = new Date($("#modifyFormDate").text()+" "+ $(end).val());
+      //console.log(endDateTime.toISOString());
+      modifyString += "&RestOut"+ i.toString()+"=" + endDateTime.toISOString();      
+      newRec += " field"+(i*2+8).toString()+":"+ endDateTime.toISOString();       
+    } else {
+      newRec += " field"+(i*2+8).toString()+":"+ "";
+    }
+    
   }
-  else {
-    alert("寫入資料庫失敗!")
-  }
+  // 補上最後一筆
+  modifyString += "&Id=" + $("#記錄號碼").text(); 
+  newRec += " field19:"+ $("#記錄號碼").text();
+  
+  console.log(oldRec);
+  console.log(newRec);
+  console.log(modifyString);
+  
+  var pwd = prompt("請再度確認要修改的資料，然後輸入密碼");
+  console.log(pwd);  
+//  if (pwd == '') {
+//    alert("密碼無效!");
+//    return;
+//  }
+  
+  var apiUrl = apiUrlBase + "?API=12&Pwd="+ pwd + 
+               "&oldRec=" + oldRec +
+               "&newRec=" + newRec +
+               modifyString;
+
+  $.loading.start($("#ml-讀取資料").text());
+  $.ajax({
+    url: apiUrl,
+    type: "GET",
+    dataType: "json",
+    success: function(returnData) {    
+      console.log(returnData);
+      $.loading.end();
+      $("#attendanceModifyForm").hide();  
+      attendanceCheck();
+    },
+
+    error: function(returnData) {    
+      console.log(returnData);
+      if (returnData.responseText.includes("incorrect")) {
+        alert("密碼不正確");
+      } else {
+        alert("Database READ ERROR!!!");
+      }
+      $.loading.end();
+    }
+  });   
+  
+
   
 }
