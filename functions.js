@@ -1200,6 +1200,8 @@ function attendanceModifyUpdate(){
   newRec += " field8:"+ $("#checkOut1").val();
   
   var modifyString="";
+  modifyString += "&Name="+ $("#modifyFormName").text();
+  modifyString += "&Date="+ $("#modifyFormDate").text();
   modifyString += "&Total="+ parseFloat($("#總出勤時間").val());
   modifyString += "&Rest="+ parseFloat($("#總休息時間").val());
   modifyString += "&Leave="+ parseFloat($("#總請假時間").val());
@@ -1258,14 +1260,14 @@ function attendanceModifyUpdate(){
                modifyString;
 
   $.loading.start($("#ml-讀取資料").text());
+  $("#attendanceModifyForm").hide();   
   $.ajax({
     url: apiUrl,
     type: "GET",
     dataType: "json",
     success: function(returnData) {    
       console.log(returnData);
-      $.loading.end();
-      $("#attendanceModifyForm").hide();  
+      $.loading.end(); 
       attendanceCheck();
     },
 
@@ -1277,6 +1279,7 @@ function attendanceModifyUpdate(){
         alert("Database READ ERROR!!!");
       }
       $.loading.end();
+      $("#attendanceModifyForm").show();       
     }
   });   
   
