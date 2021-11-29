@@ -1078,7 +1078,7 @@ async function contractCheck(){
 // used in attendanceCheck() later
 function cnvtDatetime2ToString(dateTime2, method, type){
   if( type=="date"){
-    if ( (method == "Fingerprint") || (method == "Modify")  ) {
+    if ( (method == "指紋打卡") || (method == "手動修改")  ) {
       var tmp=  new Date(dateTime2);
       var tmpStr=tmp.toLocaleDateString().replace(/\//ig,'-')
       // 修改 2021-1-1 ==> 2021-01-01
@@ -1096,7 +1096,7 @@ function cnvtDatetime2ToString(dateTime2, method, type){
     if (dateTime2.toString().substr(-13,13) == '00:00:00.000Z') return '';
     //if (dateTime2.toString().substr(0,10) == '0001-01-01') return '';
 
-    if ( (method == "Fingerprint") || (method == "Modify")  ) {
+    if ( (method == "指紋打卡") || (method == "手動修改")  ) {
       var tmp=  new Date(dateTime2);
       return tmp.toTimeString().substr(0,8);    
     } else {
@@ -1141,7 +1141,9 @@ function attendanceCheck(){
         attendanceResult[i][1] = cnvtDatetime2ToString(attendanceResult[i][1], attendanceResult[i][3], "date");
         
         // For RIZAP Taiwan Fiona
-        attendanceResult[i][3] = attendanceResult[i][3];//(attendanceResult[i][3]=="Fingerprint")?"指紋打卡":"手動打卡";
+        if (attendanceResult[i][3]=="Fingerprint") attendanceResult[i][3] = "指紋打卡";
+        else if (attendanceResult[i][3]=="Modify") attendanceResult[i][3] = "手動修改";
+        else attendanceResult[i][3] = "手動打卡";
              
         for (j=7; j < 19; j++) {
           attendanceResult[i][j] = cnvtDatetime2ToString(attendanceResult[i][j], attendanceResult[i][3], "time");
