@@ -1080,7 +1080,13 @@ function cnvtDatetime2ToString(dateTime2, method, type){
   if( type=="date"){
     if ( (method == "Fingerprint") || (method == "Modify")  ) {
       var tmp=  new Date(dateTime2);
-      return tmp.toLocaleDateString();    
+      var tmpStr=tmp.toLocaleDateString().replace(/\//ig,'-')
+      // 修改 2021-1-1 ==> 2021-01-01
+      var tmpArr = tmpStr.split('-');
+      if (tmpArr[1].length==1) tmpArr[1] ="0"+tmpArr[1];
+      if (tmpArr[2].length==1) tmpArr[2] ="0"+tmpArr[2];
+      
+      return tmpArr[0]+'-'+tmpArr[1]+'-'+tmpArr[2];    
     } else {
       return dateTime2.toString().substr(0,10);
     }    
@@ -1106,10 +1112,11 @@ function attendanceCheck(){
   // 配合 GMT0 的時差問題，將查詢時間提前一天
   var minusOneDay = new Date();
   var tmpDate = new Date(startDateStr);
+  minusOneDay.setMonth(tmpDate.getMonth());
   minusOneDay.setDate(tmpDate.getDate() -1);
   var minusOneDayStr = minusOneDay.toISOString().substr(0,10);
 
-  console.log(minusOneDayStr, endDateStr);
+  console.log(startDateStr, minusOneDayStr, endDateStr);
   // ///////////////////////////////////
 
   var apiUrl = apiUrlBase + "?API=11" + "&StartDate=" + minusOneDayStr +"&EndDate=" + endDateStr;
@@ -1206,11 +1213,15 @@ function attendanceModifyUpdate(){
   modifyString += "&Rest="+ parseFloat($("#總休息時間").val());
   modifyString += "&Leave="+ parseFloat($("#總請假時間").val());
     
-  var checkInDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkIn1").val());
-  modifyString += "&CheckIn1=" + checkInDateTime.toISOString();     
+  if ($("#checkIn1").val() !='') {
+    var checkInDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkIn1").val());
+    modifyString += "&CheckIn1=" + checkInDateTime.toISOString();     
+  }
   
-  var checkOutDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkOut1").val());
-  modifyString += "&CheckOut1=" + checkOutDateTime.toISOString();      
+  if ($("#checkOut1").val() !='') {
+    var checkOutDateTime = new Date($("#modifyFormDate").text()+" "+ $("#checkOut1").val());
+    modifyString += "&CheckOut1=" + checkOutDateTime.toISOString();      
+  }
 
   
   for (var i=1; i<6; i++){
@@ -1225,7 +1236,7 @@ function attendanceModifyUpdate(){
       //console.log(startDateTime.toISOString());
       modifyString += "&RestIn"+ i.toString()+"=" + startDateTime.toISOString();  
       newRec += " field"+(i*2+7).toString()+":"+     startDateTime.toISOString();       
-    } else {
+    } else {      
       newRec += " field"+(i*2+7).toString()+":"+ "";
     }
     
@@ -1234,7 +1245,7 @@ function attendanceModifyUpdate(){
       //console.log(endDateTime.toISOString());
       modifyString += "&RestOut"+ i.toString()+"=" + endDateTime.toISOString();      
       newRec += " field"+(i*2+8).toString()+":"+ endDateTime.toISOString();       
-    } else {
+    } else {        
       newRec += " field"+(i*2+8).toString()+":"+ "";
     }
     
@@ -1283,6 +1294,10 @@ function attendanceModifyUpdate(){
     }
   });   
   
+}
 
-  
+function clearDateTime(item) {
+  console.log(item);
+  var itemName = "#"+item;
+  $(itemName).val('');
 }

@@ -125,18 +125,42 @@
           <label id="ml-總出勤時間">總出勤時間</label><input id="總出勤時間" style="margin-left:35px; width:200px"><br>
           <label id="ml-總休息時間">總休息時間</label><input id="總休息時間" style="margin-left:35px; width:200px"><br>
           <label id="ml-總請假時間">總請假時間</label><input id="總請假時間" style="margin-left:35px; width:200px"><br>
-          <label id="ml-出勤一">出勤一</label><input type="time" id="checkIn1"  style="margin-left:65px; width:200px"><br>     
-          <label id="ml-退勤一">退勤一</label><input type="time" id="checkOut1" style="margin-left:65px; width:200px"><br>  
-          <label id="ml-休息一_開始">休息一(開始)</label><input type="time" id="restStart1" style="margin-left:24px; width:200px"><br>   
-          <label id="ml-休息一_結束">休息一(結束)</label><input type="time" id="restEnd1"   style="margin-left:24px; width:200px"><br>  
-          <label id="ml-休息二_開始">休息二(開始)</label><input type="time" id="restStart2" style="margin-left:24px; width:200px"><br>   
-          <label id="ml-休息二_結束">休息二(結束)</label><input type="time" id="restEnd2"   style="margin-left:24px; width:200px"><br> 
-          <label id="ml-休息三_開始">休息三(開始)</label><input type="time" id="restStart3" style="margin-left:24px; width:200px"><br>   
-          <label id="ml-休息三_結束">休息三(結束)</label><input type="time" id="restEnd3"   style="margin-left:24px; width:200px"><br> 
-          <label id="ml-休息四_開始">休息四(開始)</label><input type="time" id="restStart4" style="margin-left:24px; width:200px"><br>   
-          <label id="ml-休息四_結束">休息四(結束)</label><input type="time" id="restEnd4"   style="margin-left:24px; width:200px"><br> 
-          <label id="ml-休息五_開始">休息五(開始)</label><input type="time" id="restStart5" style="margin-left:24px; width:200px"><br>   
-          <label id="ml-休息五_結束">休息五(結束)</label><input type="time" id="restEnd5"   style="margin-left:24px; width:200px"><br>                                                              
+          <label id="ml-出勤一">出勤一</label><input type="time" id="checkIn1"  style="margin-left:65px; width:200px">
+            <button onClick="clearDateTime('checkIn1')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>
+            <br>     
+          <label id="ml-退勤一">退勤一</label><input type="time" id="checkOut1" style="margin-left:65px; width:200px">
+            <button onClick="clearDateTime('checkOut1')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>  
+          <label id="ml-休息一_開始">休息一(開始)</label><input type="time" id="restStart1" style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restStart1')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>               
+          <label id="ml-休息一_結束">休息一(結束)</label><input type="time" id="restEnd1"   style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restEnd1')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>           
+          <label id="ml-休息二_開始">休息二(開始)</label><input type="time" id="restStart2" style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restStart2')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>           
+          <label id="ml-休息二_結束">休息二(結束)</label><input type="time" id="restEnd2"   style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restEnd2')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>           
+          <label id="ml-休息三_開始">休息三(開始)</label><input type="time" id="restStart3" style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restStart3')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>             
+          <label id="ml-休息三_結束">休息三(結束)</label><input type="time" id="restEnd3"   style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restEnd3')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>           
+          <label id="ml-休息四_開始">休息四(開始)</label><input type="time" id="restStart4" style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restStart4')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>              
+          <label id="ml-休息四_結束">休息四(結束)</label><input type="time" id="restEnd4"   style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restEnd4')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>            
+          <label id="ml-休息五_開始">休息五(開始)</label><input type="time" id="restStart5" style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restStart5')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>             
+          <label id="ml-休息五_結束">休息五(結束)</label><input type="time" id="restEnd5"   style="margin-left:24px; width:200px">
+            <button onClick="clearDateTime('restEnd5')" style="background-color:red; color:white; font-size:12px; height:25px; border:none; border-radius:5px">清除</button>           
+            <br>                                                                         
         </div>
               
         <div class='modal-footer'>
