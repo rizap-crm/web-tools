@@ -1211,7 +1211,8 @@ function attendanceModifyUpdate(){
   var modifyString="";
   modifyString += "&Name="+ $("#modifyFormName").text();
   modifyString += "&Date="+ $("#modifyFormDate").text();
-  modifyString += "&Total="+ parseFloat($("#總出勤時間").val());
+  modifyString += "&Total="+        parseFloat($("#總出勤時間").val()); //Total same
+  modifyString += "&WorkingHours="+ parseFloat($("#總出勤時間").val()); //as WorkingHours
   modifyString += "&Rest="+ parseFloat($("#總休息時間").val());
   modifyString += "&Leave="+ parseFloat($("#總請假時間").val());
     
